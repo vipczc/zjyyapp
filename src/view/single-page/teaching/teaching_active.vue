@@ -34,7 +34,7 @@
           <p>{{firstName}}<span v-show="showSecond">-{{secondName}}</span><span v-show="showThird">-{{thirdName}}</span></p>
         </div>
         <div class="end_end">
-            <div class="end_th">
+            <div class="end_th"> 
                 <p>姓名</p>
                 <p>职称</p>
                 <p>活动数</p>
