@@ -1,0 +1,4140 @@
+<template>
+  <div>
+    <div class="main_header"></div>
+    <div class="main_top">
+      <img class="icon" src="../../../assets/images/logo.png" alt />
+      <p class="title">{{hospitalName}}</p>
+      <p class="name">{{userName}}</p>
+      <img class="select" src="../../../assets/images/selection.png" alt @click="handleClickSelect" />
+      <div v-show="userdels != 0" class="point">
+        <p>{{userdels}}</p>
+      </div>
+      <div class="modal-bg" v-if="showModal" @click="handleClickClose"></div>
+      <div class="select-modal" v-if="showModal">
+        <span class="sj"></span>
+        <p @click="handleClickPresident">
+          院长直通
+          <span v-show="userdels != 0">{{userdels}}</span>
+        </p>
+        <!-- <p>广济教学</p> -->
+        <p @click="showComplain">投诉建议</p>
+        <p @click="islogout = true">退出登录</p>
+      </div>
+    </div>
+    <div v-show="islogout" @click="islogout = false" class="logout">
+      <div class="logout_box">
+        <div class="logout_box_top">
+          <p>退出登录</p>
+          <img src="../../../assets/images/close2.png" alt />
+        </div>
+        <div class="logout_box_middle">
+          <p class="title">是否确定退出当前登录账号？</p>
+          <div class="logout_box_end">
+            <div class="logout_box_end_left">
+              <p>取消</p>
+            </div>
+            <div @click="handLogout()" class="logout_box_end_right">
+              <p>确定</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="height:95%" class="main">
+      <swiper style="height:100%" :options="swiperOption3">
+        <swiper-slide>
+          <div class="dropdown">
+            <p>下拉刷新...</p>
+          </div>
+          <div style="height: 100%; display: flex; flex-wrap: wrap;">
+            <div @click="hadleToday" class="main_today">
+              <div class="main_today_top">
+                <!-- <img class="today_img" src="../../../assets/images/today.png" alt /> -->
+                <p class="todaywork_title">今日工作</p>
+                <div class="number">
+                  <p>{{workTodaydata.length}}项</p>
+                  <img src="../../../assets/images/bluearrow.png" alt />
+                </div>
+                <!-- <img class="change_img" src="../../../assets/images/change.png" alt /> -->
+              </div>
+              <div class="main_today_bar">
+                <div v-for="(item, index) in workTodaydata.slice(0, 3)" :key="index" class="tabbar">
+                  <p class="title">{{item.title}}</p>
+                  <!-- 今日工作的标题 -->
+                  <p class="time">{{item.starttime}}</p>
+                </div>
+                <!-- <div class="tabbar">
+            <p class="title">呼吸机的临床应用</p>
+            <p class="time">10:00</p>
+          </div>
+          <div style="border:none" class="tabbar">
+            <p class="title">肺多原发癌的诊治进展</p>
+            <p class="time">12:00</p>
+                </div>-->
+              </div>
+            </div>
+            <div style="height:60%" class="teacher">
+              <div class="teacher_header">
+                <img src="../../../assets/images/maintial.png" alt />
+                <p>老师</p>
+              </div>
+              <div style="padding-top: 0.2rem;height:100%" class="teacher_main">
+                <div style="height:100%" class="teacher_main_box">
+                  <swiper
+                    ref="mySwiper2"
+                    style="width:3.6rem;height:100%"
+                    v-if="showteacherString && showteacherWork"
+                    :options="swiperOption2"
+                  >
+                    <swiper-slide>
+                      <div @click="handleClickMore" style="height:95%" class="boxshadow">
+                        <div class="box1_top">
+                          <div class="title">
+                            <p style="margin-right:0.1rem;">师资评价</p>
+                            <!-- <select v-model="couponSelected" @change="changeValue" style="border:1px solid #f0f0f7">
+                        <option value="monthly">月度</option>
+                        <option value="quarter">季度</option>
+                        <option value="year">年度</option>
+                            </select>-->
+                            <div class="selectcomp1">
+                              <p
+                                @click.stop="handleSelectcomp()"
+                                class="selectcomptitle"
+                              >{{selectname}}</p>
+                              <div v-show="selectcomp" class="selectsingle">
+                                <p @click.stop="changeValue('月度',1)" class="singletitle">月度</p>
+                                <p @click.stop="changeValue('季度',2)" class="singletitle">季度</p>
+                                <p @click.stop="changeValue('年度',3)" class="singletitle">年度</p>
+                              </div>
+                            </div>
+                          </div>
+                          <p>更多</p>
+                          <img src="../../../assets/images/right_arrow.png" alt />
+                        </div>
+                        <div class="teacher_radar">
+                          <radar
+                            v-if="flag1"
+                            ref="radar1"
+                            style="margin-top: 0.3rem;height:2.1rem"
+                            :maintitle="'对老师评价雷达图'"
+                            :barnumber="radardata1"
+                          ></radar>
+                          <div v-else style="width:100%;height:2rem;">
+                            <p style="text-align: center; line-height: 2rem; color: #dddddd;">暂无数据</p>
+                          </div>
+                          <div class="teacher_radar_detial">
+                            <div class="rader_detial_left">
+                              <div class="rader_detial_left_top">
+                                <p class="title">评价得分率</p>
+                                <p class="desc">(满分{{teacherValuate.zdmf}})</p>
+                                <p class="number">{{(teacherValuate.pjpjf)*100}}%</p>
+                              </div>
+                              <div class="rader_detial_left_end">
+                                <p class="title">评价最低分</p>
+                                <p class="number">{{teacherValuate.zdf}}</p>
+                              </div>
+                            </div>
+                            <div class="rader_detial_middle"></div>
+                            <div class="rader_detial_right">
+                              <div class="rader_detial_left_top">
+                                <p class="title">评价发送次数</p>
+                                <p class="number">{{teacherValuate.zs}}</p>
+                              </div>
+                              <div class="rader_detial_left_end">
+                                <p class="title">评价表提交率</p>
+                                <p class="number">{{teacherValuate.tjl}}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </swiper-slide>
+
+                    <swiper-slide>
+                      <div style="height:95%" class="teacher_score boxshadow">
+                        <!-- <div @click="handleTeachingStudent()" class="box1_top" >
+                    <div class="title">
+                      <p>师资绩效</p>
+                      <p style="font-size: 0.13rem;color: #9397AD;">({{moment}}月)</p>
+                    </div>
+                    <p >更多</p>
+                    <img  src="../../../assets/images/right_arrow.png" alt />
+                        </div>-->
+                        <div v-if="showteacherWork" class="teacher_score_main">
+                          <div @click="handleTeachingStudent()" class="teacher_score_main_top">
+                            <div style="padding-bottom:0.2rem;margin-top:0;" class="box1_top">
+                              <div class="title">
+                                <p>师资绩效</p>
+                                <p style="font-size: 0.13rem;color: #9397AD;">(20年/{{moment}}月)</p>
+                              </div>
+                              <p>更多</p>
+                              <!-- <a href="/teaching_student">更多</a> -->
+                              <img src="../../../assets/images/right_arrow.png" alt />
+                            </div>
+                            <div class="top_end">
+                              <div class="left">
+                                <p class="top">{{teacherWorkData.djxyrt}}</p>
+                                <p class="bottom">合计带教人/天数</p>
+                              </div>
+                              <div class="right">
+                                <p class="top">
+                                  <!-- {{(teacherWorkData.djxyhpl2*100).toFixed(2)}}
+                                  <span>%</span>-->
+                                  {{teacherWorkData.djxysl}}
+                                </p>
+                                <p class="bottom">带教学员数量</p>
+                              </div>
+                            </div>
+                            <!-- <a class="blocks" href="/teaching_student"></a> -->
+                          </div>
+                          <div @click="handleTeachingActive()" class="teacher_score_main_end">
+                            <div class="end_bottom">
+                              <div class="left">
+                                <p class="top">{{teacherWorkData.djhds}}</p>
+                                <p class="bottom">教学活动数量</p>
+                              </div>
+                              <div class="right">
+                                <p class="top">
+                                  {{(teacherWorkData.djhdhpl2*100).toFixed(2)}}
+                                  <span>%</span>
+                                </p>
+                                <p class="bottom">教学活动好评度</p>
+                              </div>
+                            </div>
+                            <!-- <a class="blocks" href="/teaching_active"></a> -->
+                          </div>
+                          <div @click="handleTeachingActive()" class="teacher_score_main_top">
+                            <div class="end_bottom">
+                              <ul class="left">
+                                <li
+                                  style="display:inline-block;width:1.5rem;padding-bottom:0.1rem"
+                                  v-for="(item,index) in teachertraintypeworkload"
+                                  :key="index"
+                                >
+                                  <p
+                                    class="top"
+                                    style="border-top:1px solid #f0f0f7;padding-top:0.1rem;"
+                                  >{{item.typesum }}</p>
+                                  <p class="bottom">{{item.traintypename }}</p>
+                                </li>
+                              </ul>
+                            </div>
+                            <!-- <a class="blocks" href="/teaching_active"></a> -->
+                          </div>
+                        </div>
+                        <!-- <div class="teacher_score_main">
+                    <div class="teacher_score_main_top">
+                      <p class="number">425</p>
+                      <p class="desc">7月绩效工作量</p>
+                    </div>
+                    <p class="detial">7月绩效工作量最佳基地前三</p>
+                    <div class="flex_betwen">
+                      <div class="flex_single">
+                        <p style="color: #7ED5BC;" class="number">17</p>
+                        <p class="desc">放射科基地</p>
+                      </div>
+                      <div class="flex_single">
+                        <p style="color: #5E7AB8;" class="number">16</p>
+                        <p class="desc">骨科基地</p>
+                      </div>
+                      <div class="flex_single">
+                        <p style="color: #326699;" class="number">15</p>
+                        <p class="desc">病理科基地</p>
+                      </div>
+                    </div>
+                    <p class="score_end">绩效工作量=教学活动数+带教学员（人/天）+监考次数+阅卷次数</p>
+                        </div>-->
+                      </div>
+                    </swiper-slide>
+                    <!-- <swiper-slide>
+                      <div
+                        @click="hadleTeacherIntroduce"
+                        style="height:95%"
+                        class="teacher_detial boxshadow"
+                      >
+                        <div class="box1_top">
+                          <div class="title">
+                            <p>师资介绍</p>
+                          </div>
+                          <p>更多</p>
+                          <img src="../../../assets/images/right_arrow.png" alt />
+                        </div>
+                        <div class="teacher_detial_main">
+                          <img src="../../../assets/images/teacher_detial.png" alt />
+                          <div class="tdetial_main">
+                            <div class="detial_main_top">
+                              <div class="detial_main_top_left">
+                                <div class="topmain">
+                                  <p class="desc">老师数量</p>
+                                  <p class="number">{{teacherDatalist.lssl}}</p>
+                                </div>
+                                <div class="detial_main_end">
+                          <p class="desc">累计带教学生量</p>
+                          <p style="color: #474C63;" class="number">{{teacherDatalist.djxss}}</p>
+                                </div>
+                              </div>
+                              <cycle :cycleName="'培训比例'"  :cyclewidth="cyclewidth" :cycleValue="cycleData.lspxl"></cycle>
+                            </div>
+                            <div class="detial_main_middle">
+                              <div class="detial_main_middle_single">
+                                <p style="color: #7ED5BC;" class="number">{{teacherDatalist.zrys}}</p>
+                                <p class="desc">主任医师</p>
+                                <div class="cycle"></div>
+                                <cycle
+                                  :cycleName="'培训比例'"
+                                  :cycleValue="cycleData.zrpxl"
+                                  :cyclewidth="cycle2width"
+                                ></cycle>
+                              </div>
+                              <div class="detial_main_middle_single">
+                                <p style="color: #5E7AB8;" class="number">{{teacherDatalist.fzrys}}</p>
+                                <p class="desc">副主任医师</p>
+                                <cycle
+                                  :cycleName="'培训比例'"
+                                  :cycleValue="cycleData.fzrpxl"
+                                  :cyclewidth="cycle2width"
+                                ></cycle>
+                              </div>
+                              <div class="detial_main_middle_single">
+                                <p style="color: #395275;" class="number">{{teacherDatalist.zzys}}</p>
+                                <p class="desc">主治医师</p>
+                                <cycle
+                                  :cycleName="'培训比例'"
+                                  :cycleValue="cycleData.zzpxl"
+                                  :cyclewidth="cycle2width"
+                                ></cycle>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                         
+                        </div>
+                      </div>
+                    </swiper-slide>-->
+                    <swiper-slide>
+                      <div
+                        @click="hadleTeacherIntroduce"
+                        style="height:95%"
+                        class="teacher_train boxshadow"
+                      >
+                        <div class="box1_top" id="handleteacher">
+                          <div class="title">
+                            <p>师资介绍</p>
+                          </div>
+                          <p>更多</p>
+                          <!-- <a href="http://localhost:8002/teacher_train">更多</a> -->
+                          <img src="../../../assets/images/right_arrow.png" alt />
+                        </div>
+                        <div v-if="showteacherString" class="teacher_train_main">
+                          <div class="train_main_top flex">
+                            <div class="train_main_top_left single">
+                              <p class="number">{{teacherDatalist.lssl}}</p>
+                              <p class="desc">老师数量</p>
+                            </div>
+                            <div class="train_main_top_right single">
+                              <p class="number">{{teacherDatalist.zrys}}</p>
+                              <p class="desc">主任医师</p>
+                            </div>
+                          </div>
+                          <div class="train_main_end flex">
+                            <div class="train_main_end_left single">
+                              <p style class="number">{{teacherDatalist.fzrys}}</p>
+                              <p class="desc">副主任医师</p>
+                            </div>
+                            <div class="train_main_end_right single">
+                              <p class="number">{{teacherDatalist.zzys}}</p>
+                              <p class="desc">主治医师</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </swiper-slide>
+                    <swiper-slide>
+                      <div
+                        @click="hadleTeacherTrain"
+                        style="height:95%"
+                        class="teacher_train boxshadow"
+                      >
+                        <div class="box1_top" id="handleteacher">
+                          <div class="title">
+                            <p>师资培训</p>
+                          </div>
+                          <p>更多</p>
+                          <!-- <a href="http://localhost:8002/teacher_train">更多</a> -->
+                          <img src="../../../assets/images/right_arrow.png" alt />
+                        </div>
+                        <div v-if="showteacherString" class="teacher_train_main">
+                          <div class="train_main_top flex">
+                            <div class="train_main_top_left single">
+                              <p class="number">{{teacherStringData.ndjhs}}</p>
+                              <p class="desc">本年度申报培训计划</p>
+                            </div>
+                            <div class="train_main_top_right single">
+                              <p class="number">{{teacherStringData.zxjhs}}</p>
+                              <p class="desc">已完成培训计划</p>
+                            </div>
+                          </div>
+                          <div class="train_main_end flex">
+                            <div class="train_main_end_left single">
+                              <p style class="number">{{teacherStringData.jhpxrs}}</p>
+                              <p class="desc">计划培训人次</p>
+                            </div>
+                            <div class="train_main_end_right single">
+                              <p class="number">{{teacherStringData.sjpxrs}}</p>
+                              <p class="desc">目前培训人次</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </swiper-slide>
+                    <swiper-slide></swiper-slide>
+                    <!-- <swiper-slide>
+                  
+                    </swiper-slide>-->
+                  </swiper>
+                  <!-- <mt-tab-container swipeable v-model="selected">
+              <mt-tab-container-item id="1">
+                
+              </mt-tab-container-item>
+              <mt-tab-container-item id="2">
+                
+              </mt-tab-container-item>
+              <mt-tab-container-item id="3">
+                
+              </mt-tab-container-item>
+              <mt-tab-container-item id="4">
+                
+              </mt-tab-container-item>
+                  </mt-tab-container>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </swiper-slide>
+        <swiper-slide>
+          <div class="student">
+            <div class="student_header">
+              <!-- <img src="../../../assets/images/student.png" alt /> -->
+              <p>学员</p>
+            </div>
+            <div class="student_main">
+              <!-- <mt-navbar v-model="student">
+            <mt-tab-item @click.native="jumpStudent(5)" id="5">考核</mt-tab-item>
+            <mt-tab-item @click.native="jumpStudent(6)" id="6">评价</mt-tab-item>
+            <mt-tab-item @click.native="jumpStudent(7)" id="7">学员概况</mt-tab-item>
+            <mt-tab-item @click.native="jumpStudent(8)" id="8">培训</mt-tab-item>
+            <mt-tab-item @click.native="jumpStudent(9)" id="9">轮转</mt-tab-item>
+              </mt-navbar>-->
+              <!-- <div class="navbar">
+            <div class="nav_single active">
+              <p @click="jumpStudent(5)">考核</p>
+            </div>
+            <div class="nav_single">
+              <p @click="jumpStudent(6)">评价</p>
+            </div>
+            <div class="nav_single">
+              <p @click="jumpStudent(7)">学员概况</p>
+            </div>
+            <div class="nav_single">
+              <p @click="jumpStudent(8)">培训</p>
+            </div>
+            <div class="nav_single">
+              <p @click="jumpStudent(9)">轮转</p>
+            </div>
+              </div>-->
+              <swiper
+                v-if="showstudentexame && showbar"
+                ref="mySwiper4"
+                style="width:3.5rem;height:10%;"
+                class="student_top_box swiper-no-swiping"
+                :options="swiperOption4"
+              >
+                <!-- <div v-if="this.starNumber == 5" class="nav_single active">
+                  <p @click="jumpStudent(5)">考核</p>
+                </div>
+                <div v-else class="nav_single ">-->
+                <!-- <p v-if="showSwipe4single">学员概况</p> -->
+                <!-- </div> -->
+                <swiper-slide>
+                  <!-- <div v-if="this.starNumber == 5" class="nav_single active">
+                  <p @click="jumpStudent(5)">考核</p>
+                </div>
+                  <div v-else class="nav_single ">-->
+                  <p>评价</p>
+                  <!-- </div> -->
+                </swiper-slide>
+                <swiper-slide>
+                  <!-- <div :class="this.starNumber == 6?'nav_single active':'nav_single'"> -->
+                  <p>轮转</p>
+                  <!-- </div> -->
+                </swiper-slide>
+                <swiper-slide>
+                  <!-- <div :class="this.starNumber == 7?'nav_single active':'nav_single'"> -->
+                  <p>培训</p>
+                  <!-- </div> -->
+                </swiper-slide>
+                <swiper-slide>
+                  <!-- <div :class="this.starNumber == 8?'nav_single active':'nav_single'"> -->
+                  <p>考核</p>
+                  <!-- </div> -->
+                </swiper-slide>
+                <swiper-slide>
+                  <!-- <div v-if="this.starNumber == 9" class="nav_single active"> -->
+                  <p>学员概况</p>
+                  <!-- </div>
+                <div v-else class="nav_single">
+                  <p @click="jumpStudent(9)">轮转</p>
+                  </div>-->
+                </swiper-slide>
+              </swiper>
+              <swiper
+                v-if="showstudentexame"
+                ref="mySwiper"
+                class="student_main_box"
+                :options="swiperOption"
+              >
+                <!-- 培训-->
+                <swiper-slide>
+                  <div
+                    @click="hadleStudentTrain"
+                    v-show="showtrain"
+                    class="student_train boxshadow"
+                  >
+                    <div class="student_train_top box2_top">
+                      <p class="title">20/{{moment}}月学员培训概况</p>
+                      <p class="more">更多</p>
+                      <!-- <a class="more" href="/student_train">更多</a> -->
+                      <img src="../../../assets/images/right_arrow.png" alt />
+                    </div>
+                    <div style="width: 3rem;display:none">
+                      <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
+                    </div>
+                    <div v-if="showstudentexame" class="student_train_main">
+                      <div class="student_train_single">
+                        <div class="student_single_left">
+                          <p style="color: #F9953F;" class="number">{{studenttrain.trainsum.zcc}}</p>
+                          <p class="desc">{{moment}}月共计培训场次</p>
+                        </div>
+                        <div class="student_single_right">
+                          <p>一年级 {{studenttrain.trainsum.ynjcc}}</p>
+                          <p>二年级 {{studenttrain.trainsum.enjcc}}</p>
+                          <p style="margin:0">三年级 {{studenttrain.trainsum.snjcc}}</p>
+                          <!-- <p style="margin:0">研究生 102</p> -->
+                        </div>
+                      </div>
+                      <div class="student_train_single middle">
+                        <div class="student_single_left">
+                          <p
+                            style="color: #7ED5BC;"
+                            class="number"
+                          >{{studenttrain.trainrjcs.rjpxcs}}</p>
+                          <p class="desc">{{moment}}月人均培训次数</p>
+                          <p class="desc">（总人数{{studenttrain.trainrjcs.zrs}}人）</p>
+                        </div>
+                        <div class="student_single_right">
+                          <p>一年级 {{studenttrain.trainrjcs.ynjrjcs}}</p>
+                          <p>二年级 {{studenttrain.trainrjcs.enjrjcs}}</p>
+                          <p style="margin:0">三年级 {{studenttrain.trainrjcs.snjrjcs}}</p>
+                          <!-- <p style="margin:0">研究生 98</p> -->
+                        </div>
+                      </div>
+                      <div class="student_train_single">
+                        <div class="student_single_left">
+                          <div class="flex_end">
+                            <p
+                              style="color: #326699;"
+                              class="number"
+                            >{{studenttrain.trainljrc.ljrc}}</p>
+                            <!-- <p style="color: #326699;">.2%</p> -->
+                          </div>
+                          <p class="desc">{{moment}}月培训累计人次</p>
+                        </div>
+                        <div class="student_single_right">
+                          <p>一年级 {{studenttrain.trainljrc.ynjrc}}</p>
+                          <p>二年级 {{studenttrain.trainljrc.enjrc}}</p>
+                          <p style="margin:0">三年级 {{studenttrain.trainljrc.snjrc}}</p>
+                          <!-- <p style="margin:0">研究生 32.5%</p> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </swiper-slide>
+                <!-- 考核-->
+                <swiper-slide>
+                  <div @click="hadleStudentExamine" class="student_exam boxshadow">
+                    <div class="student_train_top box2_top">
+                      <p style="margin-right:0.1rem" class="title">住培考核状况</p>
+                      <!-- <select v-model="stuSelected" @change="changeValues" style="border:1px solid #f0f0f7">
+                    <option value="monthly">月度</option>
+                    <option value="quarter">季度</option>
+                    <option value="year">年度</option>
+                      </select>-->
+                      <div class="selectcomp">
+                        <p
+                          @click.stop="handleSelectcomp1()"
+                          class="selectcomptitle"
+                        >上{{selectname1}}</p>
+                        <div v-show="selectcomp1" class="selectsingle">
+                          <p @click.stop="changeValues('月度')" class="singletitle">理论</p>
+                          <p @click.stop="changeValues('季度')" class="singletitle">技能</p>
+                          <!-- <p @click.stop="changeValues('年度')" class="singletitle">上年度</p> -->
+                        </div>
+                      </div>
+                      <p class="more">更多</p>
+                      <img src="../../../assets/images/right_arrow.png" alt />
+                    </div>
+                    <div style="width: 3rem;display:none;">
+                      <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
+                    </div>
+                    <!-- <div class="student_exam_main">
+                      <img src="../../../assets/images/student_exam.png" alt />
+
+                      <div class="student_exam_main_middle">
+                        <p class="xray">通过率</p>
+                        <div class="single_main">
+                          <div
+                            :style="{'height': studentexame.ckkstgl2*0.025 + 'rem'}"
+                            class="single"
+                          >
+                            <p class="single_percen">{{studentexame.ckkstgl}}</p>
+                            <div class="single_bottom">
+                        <p>住培:99.8%</p>
+                        <p>专培:99%</p>
+                        <p>本科生:99.8%</p>
+                        <p>研究生:99.2%</p>
+                            </div>
+                          </div>
+                          <div
+                            :style="{'height': studentexame.ndkstgl2*0.025 + 'rem'}"
+                            class="single"
+                          >
+                            <p class="single_percen">{{studentexame.ndkstgl}}</p>
+                            <div class="single_bottom">
+                        <p>住培:99.8%</p>
+                        <p>专培:99%</p>
+                        <p>本科生:99.8%</p>
+                        <p>研究生:99.2%</p>
+                            </div>
+                          </div>
+                          <div
+                            :style="{'height': studentexame.jykstgl2*0.025 + 'rem'}"
+                            class="single"
+                          >
+                            <p class="single_percen">{{studentexame.jykstgl}}</p>
+                            <div class="single_bottom">
+                        <p>住培:99.8%</p>
+                        <p>专培:99%</p>
+                        <p>本科生:99.8%</p>
+                        <p>研究生:99.2%</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="student_exam_main_end">
+                        <p>发布场次</p>
+                        <p>参与人数</p>
+                        <p>得分率</p>
+                      </div>
+                    </div>-->
+                    <div v-for="(item,index) in studentexame" :key="index" class="tabletop">
+                      <p class="topname">{{item.examtype}}</p>
+                      <div class="top">
+                        <div class="end">
+                          <div class="end_end">
+                            <div class="end_th">
+                              <p>发布场次</p>
+                              <p>参与人次</p>
+                              <p>得分率</p>
+                            </div>
+                            <div class="endtable">
+                              <div class="end_td">
+                                <p>{{item.kscc}}</p>
+                                <p>{{item.cysc}}</p>
+                                <p>{{item.dfl}}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </swiper-slide>
+
+                <!-- 学员概况-->
+                <swiper-slide>
+                  <div @click="hadleStudentSurvey" class="boxshadow">
+                    <div class="box2_top">
+                      <div class="top">
+                        <p class="title">当前学员概况</p>
+                        <p class="desc">截止时间:当前</p>
+                      </div>
+                      <p class="more">更多</p>
+                      <img src="../../../assets/images/right_arrow.png" alt />
+                    </div>
+                    <div style="width: 3rem;display:none;">
+                      <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
+                    </div>
+                    <div class="charts">
+                      <div class="radechart" v-for="(item,index) in studenttype" :key="index">
+                        <div class="radechart_desc_top" v-if="item.typeid=='999'">
+                          <p class="title">{{item.typename}}</p>
+                          <p class="number">{{item.studentsum}}</p>
+                        </div>
+                      </div>
+                      <div class="radechart">
+                        <div class="radechart_desc">
+                          <div class="radechart_desc_end">
+                            <div class="radechart_desc_detial">
+                              <div style="background:#5E7AB8" class="block"></div>
+                              <p class="title">{{studenttype[1].typename}}</p>
+                              <p class="newnumber">{{studenttype[1].studentsum}}</p>
+                              <p class="desc">{{studenttype[1].slbl}}</p>
+                            </div>
+                            <div class="radechart_desc_detial">
+                              <div style="background:#395275" class="block"></div>
+                              <p class="title">{{studenttype[2].typename}}</p>
+                              <p class="newnumber">{{studenttype[2].studentsum}}</p>
+                              <p class="desc">{{studenttype[2].slbl}}</p>
+                            </div>
+                            <div class="radechart_desc_detial">
+                              <div style="background:#7ED5BC" class="block"></div>
+                              <p class="title">{{studenttype[3].typename}}</p>
+                              <p class="newnumber">{{studenttype[3].studentsum}}</p>
+                              <p class="desc">{{studenttype[3].slbl}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        id="myChart2"
+                        :style="{width: '1.2rem', height: '1.2rem', marginLeft:'auto',marginRight: '0.1rem'}"
+                      ></div>
+                      <div class="pointchart">
+                        <p class="title">招收人数统计图{{data}}</p>
+                        <div class="selfchart">
+                          <p class="xray">人数</p>
+                          <p class="yray">
+                            <span>时</span>
+                            <br />
+                            <span>间</span>
+                          </p>
+                          <div class="selfchart_main">
+                            <div
+                              v-for="(item, index) in studentsubject"
+                              :key="index"
+                              class="selfchart_main_single"
+                            >
+                              <div class="left">
+                                <p style="color:#77CAF6">{{item.zszs}}</p>
+                                <div :style="{ 'height': item.zszs*0.001 + 'rem' }" class="block"></div>
+                              </div>
+                              <div class="right">
+                                <p style="color:#326699">{{item.jqzyzss}}</p>
+                                <div
+                                  :style="{ 'height': item.jqzyzss*0.001 + 'rem' }"
+                                  class="block"
+                                ></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="selfchart_end">
+                          <p style="margin-right:0.06rem">0</p>
+                          <p v-for="(item2, index2) in studentsubject" :key="index2">{{item2.nian}}</p>
+                        </div>
+                        <!-- <div id="myChart3" :style="{width: '2.6rem', height: '2rem'}"></div> -->
+                        <!-- <div id="myChart4" :style="{width: '2.6rem', height: '2rem', position:'absolute', bottom:'0.55rem', marginLeft:'0.1rem'}"></div> -->
+                        <div class="pointchart_desc">
+                          <div style="background: #77CAF6;" class="block"></div>
+                          <p style="margin-right:auto">总招收人数</p>
+                          <div style="background: #326699;" class="block"></div>
+                          <p style="margin-right:0.15rem">紧缺专业招收人数</p>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <img class="box1_img" src="../../../assets/images/student_box1.png" alt /> -->
+                  </div>
+                </swiper-slide>
+
+                <!-- 评价-->
+                <swiper-slide>
+                  <div @click="hadleStudentScore" class="student_score boxshadow">
+                    <div class="student_train_top box2_top">
+                      <p class="title">学员评价概况</p>
+                      <p class="more">更多</p>
+                      <img src="../../../assets/images/right_arrow.png" alt />
+                    </div>
+                    <div style="width: 3rem;display:none">
+                      <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
+                    </div>
+                    <div class="student_score_main">
+                      <radar
+                        v-if="flag2"
+                        ref="radar2"
+                        :maintitle="'360评价图'"
+                        :barnumber="radardata2"
+                      ></radar>
+                      <div v-else style="width:100%;height:2rem;">
+                        <p style="text-align: center; line-height: 2rem; color: #dddddd;">暂无数据</p>
+                      </div>
+                      <div class="student_score_main_desc">
+                        <div class="score_main_single">
+                          <p class="title">评价平均分</p>
+                          <p class="ddes">（满分{{studentvalue.evaluateoverview.zdmf}}）</p>
+                          <p class="answer">{{studentvalue.evaluateoverview.pjpjf}}</p>
+                        </div>
+                        <div class="score_main_single">
+                          <p class="title">各角色对学员评价最低分</p>
+                          <p class="answer">{{studentvalue.evaluateoverview.zdf}}</p>
+                        </div>
+                        <div class="score_main_single">
+                          <p class="title">各角色对学员评价总数</p>
+                          <p class="answer">{{studentvalue.evaluateoverview.zs}}</p>
+                        </div>
+                        <div class="score_main_single">
+                          <p class="title">评价表提交率</p>
+                          <p class="answer">{{studentvalue.evaluateoverview.tjl}}</p>
+                        </div>
+                      </div>
+                      <!-- <img src="../../../assets/images/student_score.png" alt /> -->
+                    </div>
+                  </div>
+                </swiper-slide>
+                <!-- 轮转-->
+                <swiper-slide>
+                  <div @click="handleRotation" class="teacher_train boxshadow">
+                    <div class="student_rotation_top box2_top">
+                      <p class="title">科室人数</p>
+                      <p class="more">更多</p>
+                      <!-- <a class="more" href="/on_rotation">更多</a> -->
+                      <img src="../../../assets/images/right_arrow.png" alt />
+                    </div>
+                    <div style="width: 3rem;display:none">
+                      <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
+                    </div>
+                    <div v-if="showbar" class="student_rotation_main">
+                      <!-- <img src="../../../assets/images/on_rotation_main.png" alt /> -->
+                      <!-- <barlabel
+                        :barnuber="0.005"
+                        :barrightdata="barright"
+                        :barleftdata="barleft"
+                        style="width:2.4rem;"
+                      ></barlabel>-->
+                      <!-- <p class="desc">科室人数比例(最高)=科室内实际人数/科室内额定人数</p> -->
+                      <div class="rotation_desc">
+                        <p class="title">当前轮转人员分布</p>
+                        <p class="desc">数据截止时间:当前</p>
+                        <!-- <div class="rotation_desc_main">
+                          <div class="rotation_desc_left">
+                            <p class="number">{{studentround.dqlzrs}}</p>
+                            <p class="number2">当前轮转人数</p>
+                            <p class="number3">季度</p>
+                          </div>
+                          <div class="rotation_desc_middle">
+                            <p style="color: #5E7AB8;" class="number">{{studentround.waplzxys}}</p>
+                            <p class="number2">未排轮转人数</p>
+                            <p class="number3">季度</p>
+                          </div>
+                          <div class="rotation_desc_middle">
+                            <p style="color: #5E7AB8;" class="number">{{studentround.wajhlz}}</p>
+                            <p class="number2">未按计划轮转</p>
+                            <p class="number3">季度</p>
+                          </div>
+                          <div class="rotation_desc_right">
+                            <p style="color: #326699;" class="number">{{studentround.tprs}}</p>
+                            <p class="number2">退培人数</p>
+                            <p class="number3">年度</p>
+                          </div>
+                        </div>-->
+                        <div class="teacher_train_main">
+                          <div class="train_main_top flex">
+                            <div class="train_main_top_left single">
+                              <p class="number">{{studentround.dqlzrs}}</p>
+                              <p class="number2">当前轮转人数</p>
+                              <p class="number3">季度</p>
+                            </div>
+                            <div class="train_main_top_right single">
+                              <p style="color: #5E7AB8;" class="number">{{studentround.waplzxys}}</p>
+                              <p class="number2">未排轮转人数</p>
+                              <p class="number3">季度</p>
+                            </div>
+                          </div>
+                          <div class="train_main_end flex">
+                            <div class="train_main_end_left single">
+                              <p style="color: #5E7AB8;" class="number">{{studentround.wajhlz}}</p>
+                              <p class="number2">未按计划轮转</p>
+                              <p class="number3">季度</p>
+                            </div>
+                            <div class="train_main_end_right single">
+                              <p style="color: #326699;" class="number">{{studentround.tprs}}</p>
+                              <p class="number2">退培人数</p>
+                              <p class="number3">年度</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </swiper-slide>
+              </swiper>
+            </div>
+          </div>
+        </swiper-slide>
+        <swiper-slide>
+          <div class="skill">
+            <div class="skill_top">
+              <!-- <div @click="handleSkill()" class="skill_top"> -->
+              <div class="top">
+                <p class="title">技能中心</p>
+                <!-- <p class="more">更多</p> -->
+                <!-- <img class="arrow" src="../../../assets/images/pass2.png" alt /> -->
+              </div>
+              <!-- <p style="text-align: center; line-height: 1.8rem; color: #dddddd;">暂无数据</p> -->
+              <div class="middle">
+                <div class="middle_left">
+                  <div class="middle_left_top">
+                    <p class="number">{{skillcentrdata.ljhdcs}}</p>
+                    <p class="desc">累计活动次数</p>
+                  </div>
+                  <div class="middle_left_end">
+                    <p class="number">{{skillcentrdata.ljsyrc}}</p>
+                    <p class="desc">累计使用人次</p>
+                  </div>
+                </div>
+                <div class="middle_right">
+                  <div
+                    v-for="(item3, index3) in skilldata"
+                    :key="index3"
+                    class="middle_right_single"
+                  >
+                    <p class="desc">{{item3.desc}}</p>
+                    <p class="number">{{item3.number}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <img class="skill_back" src="../../../assets/images/skill_back.png" alt /> -->
+            <!-- <mt-navbar v-model="skill">
+              <mt-tab-item id="10">经典活动</mt-tab-item>
+              <mt-tab-item id="11">近3日活动</mt-tab-item>
+            </mt-navbar>-->
+            <div style="height: 40%;display:none">
+              <p style="text-align: center; line-height: 2rem; color: #dddddd;">暂无数据</p>
+            </div>
+            <mt-tab-container v-model="skill">
+              <mt-tab-container-item id="10">
+                <div style="height: 2.3rem" class="news">
+                  <!-- <div
+                    @click="handleNews(1,item.id)"
+                    class="news_detial"
+                    v-for="(item, index) in historyactive.slice(0,3)"
+                    :key="index"
+                    v-html="item.briefcontent"
+                  >
+                  </div>-->
+                  <!-- <div @click="handleNews(1)" class="news_detial">
+                <div class="news_detial_left">
+                  <p class="title">第七期全国住院医师规范化培训专业基地教学主任轮训班</p>
+                  <p class="time">2019/8/21</p>
+                </div>
+                <img src="../../../assets/images/activity/640.jpeg" alt />
+              </div>
+              <div @click="handleNews(2)" class="news_detial">
+                <div class="news_detial_left">
+                  <p class="title">改变思维方式 重塑医患关系——浙大二院“巴林特小组”培训圆满结束</p>
+                  <p class="time">2019/8/23</p>
+                </div>
+                <img src="../../../assets/images/activity/moreactive/640.jpeg" alt />
+                  </div>-->
+                </div>
+              </mt-tab-container-item>
+              <mt-tab-container-item id="11">
+                <div class="news">
+                  <!-- <div
+                    @click="handleNews(2,item.id)"
+                    class="news_detial"
+                    v-for="(item, index) in threeactive.slice(0,3)"
+                    :key="index"
+                    v-html="item.briefcontent"
+                  ></div>-->
+                  <!-- <div @click="handleNews(1)" class="news_detial">
+                <div class="news_detial_left">
+                  <p class="title">第七期全国住院医师规范化培训专业基地教学主任轮训班</p>
+                  <p class="time">2019/8/21</p>
+                </div>
+                <img src="../../../assets/images/activity/640.jpeg" alt />
+              </div>  
+              <div @click="handleNews(2)" class="news_detial">
+                <div class="news_detial_left">
+                  <p class="title">改变思维方式 重塑医患关系——浙大二院“巴林特小组”培训圆满结束</p>
+                  <p class="time">2019/8/23</p>
+                </div>
+                <img src="../../../assets/images/activity/moreactive/640.jpeg" alt />
+                  </div>-->
+                </div>
+              </mt-tab-container-item>
+            </mt-tab-container>
+            <!-- <div @click="handleActive()" class="show_more">
+              <p>查看更多...</p>
+            </div>-->
+          </div>
+        </swiper-slide>
+      </swiper>
+    </div>
+    <div v-show="complainShow" @click="hideComplain" class="complain">
+      <div class="complain_win">
+        <div class="complain_top">
+          <p>投诉建议</p>
+          <img src="../../../assets/images/close2.png" alt />
+        </div>
+        <!-- <p style="text-align: center; line-height: 1.2rem; color: #dddddd;">暂无数据</p> -->
+        <div class="complain_main">
+          <div class="complain_main_left">
+            <p class="number">{{proposaldata.ndzs}}</p>
+            <p class="desc">本年度投诉建议总数</p>
+          </div>
+          <div class="complain_main_right">
+            <div class="complain_main_right_top">
+              <p>已反馈数量</p>
+              <p style="margin-left:0.15rem;color: #FFBC2E;">{{proposaldata.wcls}}</p>
+            </div>
+            <div class="complain_main_right_end">
+              <p>已处理数量</p>
+              <p style="margin-left:0.15rem;color: #2EBF07;">{{proposaldata.ycls}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>  
+  
+<script>
+import "swiper/dist/css/swiper.css";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
+import radar from "../../../components/mecharts/radar.vue";
+import cycle from "../../../components/mecharts/cycle.vue";
+import barlabel from "../../../components/mecharts/barlabel.vue";
+import myCharts from "echarts";
+import { Indicator } from "mint-ui";
+import { querySkillCentredata, queryActivitydata } from "../../../api/skill";
+import {
+  teachereValuate,
+  workToday,
+  teacherData,
+  teacherWorkload,
+  teacherStrainingdata,
+  queryStudenteValuate,
+  queryHomepageRounddata,
+  queryHomepageTraindata,
+  queryHomepageExamdata,
+  queryHomepageStudentdata,
+  queryProposalsheetdata,
+  queryProposalsheetdata2
+} from "../../../api/main";
+import Cookies from "js-cookie";
+import moment from "moment";
+export default {
+  name: "page-tab-container",
+  data() {
+    const self = this;
+    return {
+      active: "tab-container1",
+      selected: "1",
+      student: "7",
+      skill: "10",
+      hospitalName: "",
+      userName: "",
+      complainShow: false,
+      showModal: false,
+      cyclewidth: "1rem",
+      cycle2width: "0.7rem",
+      cyclename: "cycle1",
+      islogout: false,
+      starNumber: 0,
+      endNumber: 1157,
+      winHeight: 0,
+      showbar: true,
+      showtrain: false,
+      flag1: false,
+      flag2: false,
+      selectcomp1: false,
+      selectname1: "月度",
+      selectcomp: false,
+      selectname: "月度",
+      showstudentexame: false,
+      showSwipe4single: false,
+      studentexame: {},
+      historyactive: [],
+      threeactive: [],
+      userdels: 0,
+      moment: 0,
+      mounth: "本月",
+      endtime: "11月30日",
+      typedd: 0,
+      proposaldata: "",
+      // showBar:true,
+      radardata1: [
+        {
+          name: "学员满意"
+        },
+        {
+          name: "教学态度"
+        },
+        {
+          name: "沟通反馈"
+        },
+        {
+          name: "教学技巧"
+        },
+        {
+          name: "教学氛围"
+        },
+        {
+          name: "职业素养"
+        }
+      ],
+      radardata2: [
+        {
+          name: "终身学习 161"
+        },
+        {
+          name: "患者照护162 "
+        },
+        {
+          name: "专业精神162 "
+        },
+        {
+          name: "知识技能159 "
+        },
+        {
+          name: "沟通合作 158"
+        },
+        {
+          name: "职业素养 158"
+        }
+      ],
+      background2: ["#C9D5EC", "#5E7AB8", "#395275", "#7ED5BC"],
+      data: "",
+      swiperOption: {
+        slidesPerView: 2,
+        spaceBetween: 180,
+        centeredSlides: true,
+        loop: true,
+        observer: true,
+        observeParents: true,
+        speed: 500,
+        longSwipes: false,
+        on: {
+          transitionStart: function(event) {
+            // console.log(self.$refs.mySwiper4);
+            self.$refs.mySwiper4.swiper.slideToLoop(
+              this.activeIndex - 5,
+              800,
+              false
+            );
+          },
+          transitionEnd: function(event) {
+            //你的事件
+            // console.log(self.$refs.mySwiper4,1);
+            // self.jumpStudent(this.activeIndex)
+            // console.log(this.activeIndex,"wsq");
+            // const realIndexs = this.realIndex;
+            // // console.log(realIndexs);
+            // if (realIndexs == 3) {
+            //   self.$refs.radar2.drawLine()
+            // }
+            // self.handleClickSlideTeacher(realIndexs);
+            // self.$forceUpdate()
+            // if (this.activeIndex + 3 > 9) {
+            //   self.student = "5";
+            //   self.$refs.mySwiper4.swiper.slideToLoop(5, 1000, false);
+            // } else if (this.activeIndex + 3 < 5) {
+            //   self.student = "9";
+            //   self.$refs.mySwiper4.swiper.slideToLoop(9, 1000, false);
+            // } else {
+            //   self.student = (this.activeIndex + 3).toString();
+            //   self.$refs.mySwiper4.swiper.slideToLoop(this.activeIndex + 3, 1000, false);
+            //   self.$forceUpdate()
+            // }
+          },
+          click: function() {
+            const realIndex = this.realIndex;
+            self.handleClickSlide(realIndex);
+          }
+        }
+      },
+      swiperOption4: {
+        // slidesOffsetAfter : 200,
+        slidesPerView: 5,
+        spaceBetween: 3,
+        // centeredSlides: true,
+        loop: true,
+        observer: true,
+        observeParents: true,
+        // loopedSlides: 5,
+        centeredSlides: true,
+        // slideToClickedSlide: true,
+        noSwiping: true,
+        speed: 800,
+        // allowSlideNext : false,
+        // allowSlidePrev : false,
+        on: {
+          transitionEnd: function(event) {
+            //你的事件
+            // setTimeout(() => {
+            // console.log(this.activeIndex);
+            //   self.$refs.mySwiper.swiper.slideToLoop(this.activeIndex, 1000, false);
+            //   self.$forceUpdate()
+            // }, 100);
+            // self.jumpStudent(this.activeIndex)
+            // self.starNumber = this.activeIndex
+            // console.log(self.$refs.mySwiper,2);
+            // self.jumpStudentTop(this.activeIndex)
+            // if (this.activeIndex > 9) {
+            //   self.starNumber = '5';
+            //   self.$refs.mySwiper4.swiper.slideToLoop(5, 1000, false);
+            // } else if (this.activeIndex < 5) {
+            //   self.starNumber = '9';
+            //   self.$refs.mySwiper4.swiper.slideToLoop(9, 1000, false);
+            // } else {
+            //   self.starNumber = (this.activeIndex).toString();
+            // }
+            // console.log(self.starNumber);
+            //
+          }
+        }
+        // centeredSlides : true,
+        // slidesOffsetBefore : 100,
+      },
+      swiperOption2: {
+        // slidesOffsetAfter : 200,
+        slidesPerView: 2,
+        spaceBetween: 340,
+        // centeredSlides: true,
+        loop: false,
+        observer: true,
+        observeParents: true,
+        on: {
+          // click: function () {
+          //   const realIndexs = this.realIndex;
+          //   self.handleClickSlideTeacher(realIndexs);
+          // }
+        }
+        // centeredSlides : true,
+        // slidesOffsetBefore : 100,
+      },
+      swiperOption3: {
+        // scrollbar: '.wrap-scroll',
+        direction: "vertical",
+        slidesPerView: 1,
+        speed: 300,
+        on: {
+          touchStart: function(event) {
+            self.typedd = this.activeIndex;
+          },
+          transitionEnd: function(event) {
+            if (this.activeIndex == 0 && self.typedd == 0) {
+              // console.log(2222222);
+              workToday("", "").then(res => {
+                if (JSON.parse(res).code == 1) {
+                  this.workTodaydata = JSON.parse(res).worktodaylist;
+                } else {
+                  console.log("暂无数据");
+                }
+              });
+            }
+          }
+        }
+        // spaceBetween: 1,
+        // mousewheelControl: false,
+        // freeMode: true
+      },
+      selfchartdata: [
+        {
+          left: 34,
+          right: 32,
+          time: 2015
+        },
+        {
+          left: 298,
+          right: 31,
+          time: 2016
+        },
+
+        {
+          left: 380,
+          right: 48,
+          time: 2017
+        },
+        {
+          left: 458,
+          right: 46,
+          time: 2018
+        },
+        {
+          left: 379,
+          right: 48,
+          time: 2019
+        }
+      ],
+      skilldata: [
+        {
+          desc: "本月活动次数",
+          number: "8"
+        },
+        {
+          desc: "本月使用人次",
+          number: "8"
+        },
+        {
+          desc: "技能中心器材",
+          number: "238"
+        },
+        {
+          desc: "技能中心面积",
+          number: "600m²"
+        }
+      ],
+      // datacharts: [
+      //   {
+      //     name: "数据1",
+      //     value: 36,
+      //     rate: 12
+      //   },
+      //   {
+      //     name: "数据2",
+      //     value: 20,
+      //     rate: 20
+      //   },
+      //   {
+      //     name: "数据3",
+      //     value: 16,
+      //     rate: -40
+      //   }
+      // ],
+      teacherValuate: "",
+      teacherBardata: "",
+      workTodaydata: "",
+      teacherDatalist: "",
+      showteacherWork: false,
+      teacherWorkData: "",
+      teachertraintypeworkload: "",
+      showteacherString: false,
+      teacherStringData: "",
+      skillcentrdata: "",
+      studentvalue: {
+        dimensionevaluatelist: [],
+        evaluateoverview: {}
+      },
+      studentround: "",
+      studenttype: "",
+      studentsubject: "",
+      studentpie: false,
+      studenttrain: {
+        trainsum: {},
+        trainrjcs: {},
+        trainljrc: {}
+      },
+      couponSelected: "monthly",
+      stuSelected: "monthly",
+      barleft: [],
+      barright: [],
+      cycleData: {
+        lspxl: 11,
+        zrpxl: 11,
+        fzrpxl: 11,
+        zzpxl: 11
+      }
+    };
+  },
+  // watch:{
+  //   flag1(){
+  //     setTimeout(() => {
+  //       this.$refs.radar1.drawLine()
+  //     }, 3000);
+  //   }
+  // },
+  methods: {
+    randomRgb(item) {
+      let R = Math.floor(Math.random() * 130 + 110);
+      let G = Math.floor(Math.random() * 130 + 110);
+      let B = Math.floor(Math.random() * 130 + 110);
+      return {
+        background: "rgb(" + R + "," + G + "," + B + ")"
+      };
+    },
+
+    handleClickSlide(id) {
+      // console.log(id);
+      if (id == 0) {
+        this.hadleStudentTrain();
+      }
+      if (id == 4) {
+        this.handleRotation();
+      }
+    },
+    handleClickSlideTeacher(id) {
+      if (id == 0) {
+        this.hadleTeacherTrain();
+      }
+      // if (id == 3) {
+      //   this.handleTeachingStudent()
+      // }
+    },
+    handleClickSelect() {
+      this.showModal = true;
+    },
+    handleClickClose() {
+      this.showModal = false;
+    },
+    handleClickPresident() {
+      this.$router.push("/president");
+    },
+    handleClickMore() {
+      this.$router.push("/teacher_comment");
+    },
+    showComplain() {
+      this.showModal = false;
+      this.complainShow = true;
+    },
+    hideComplain() {
+      this.complainShow = false;
+    },
+    hadleToday() {
+      this.$router.push("/today_work");
+    },
+    hadleTeacherTrain() {
+      this.$router.push("/teacher_train");
+    },
+    hadleStudentScore() {
+      this.$router.push("/comment");
+    },
+    hadleTeacherIntroduce() {
+      this.$router.push("/teacher_introduce");
+    },
+    handleRotation() {
+      this.$router.push("/on_rotation");
+    },
+    hadleTeacherMerits() {
+      this.$router.push("/teacher_merits");
+    },
+    hadleStudentExamine() {
+      this.$router.push("/student_examine");
+    },
+    hadleStudentSurvey() {
+      this.$router.push("/student_survey");
+    },
+    hadleStudentTrain() {
+      this.$router.push("/student_train");
+    },
+    handleSkill() {
+      this.$router.push("/skill_center");
+    },
+    handleTeachingActive() {
+      this.$router.push("/teaching_active");
+    },
+    handleTeachingStudent() {
+      this.$router.push("/teaching_student");
+    },
+    handleActive() {
+      this.$router.push("/active_center");
+    },
+    handleNews(type, id) {
+      this.$router.push({
+        path: "/activity_detail",
+        query: {
+          type: type,
+          id: id
+        }
+      });
+    },
+    jumpStudent(ins) {
+      this.$refs.mySwiper.swiper.slideToLoop(ins, 1000, false); //切换到第一个slide，速度为1秒
+      this.$forceUpdate();
+    },
+    jumpStudentTop(ins) {
+      this.$refs.mySwiper4.swiper.slideToLoop(ins - 5, 1000, false); //切换到第一个slide，速度为1秒
+      this.$forceUpdate();
+    },
+    handLogout() {
+      document.title = "九划";
+      Cookies.remove("user_name");
+      Cookies.remove("hos_name");
+      this.$router.push("/login");
+    },
+    changeTab() {
+      this.student = "8";
+    },
+    changeValue(type, state) {
+      Indicator.open("加载中...");
+      this.selectcomp = false;
+      this.selectname = type;
+      this.teacherVal(state, "01", "12");
+      // if (type == '年度') {
+      //   this.teacherVal('01','12')
+      // }else if (type == '季度') {
+      //   switch (moment().quarter()) {
+      //     case 1:
+      //         this.teacherVal('01','03')
+      //       break;
+      //     case 2:
+      //         this.teacherVal('04','06')
+      //       break;
+      //     case 3:
+      //         this.teacherVal('07','09')
+      //       break;
+      //     case 4:
+      //         this.teacherVal('10','12')
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      // }else{
+      //   // if (moment().date() < 20) {
+      //     this.teacherVal(this.moment,this.moment)
+      //   // }else{
+      //   //   this.teacherVal(moment().month() + 1,moment().month() + 1)
+      //   // }
+      // }
+    },
+    changeValues(type) {
+      this.selectcomp1 = false;
+      this.selectname1 = type;
+      if (type == "年度") {
+        this.studentVal("01", "12");
+      } else if (type == "季度") {
+        switch (moment().quarter()) {
+          case 1:
+            this.studentVal("01", "03");
+            break;
+          case 2:
+            this.studentVal("04", "06");
+            break;
+          case 3:
+            this.studentVal("07", "09");
+            break;
+          case 4:
+            this.studentVal("10", "12");
+            break;
+          default:
+            break;
+        }
+      } else {
+        if (moment().date() < 20) {
+          this.studentVal(this.moment, this.moment);
+        } else {
+          this.studentVal(moment().month() + 1, moment().month() + 1);
+        }
+      }
+    },
+    teacherVal(type, start, end) {
+      teachereValuate(type, start, end)
+        .then(res => {
+          // console.log(JSON.parse(res));
+
+          // console.log(moment(moment().year() + "-" + start,"YYYY-MM").daysInMonth(),moment(moment().year() + "-" + end,"YYYY-MM").daysInMonth());
+          if (JSON.parse(res).code == 1) {
+            (this.teacherValuate = JSON.parse(res).evaluateoverview),
+              (this.teacherBardata = JSON.parse(res).dimensionevaluatelist);
+            var arrsp = [];
+            for (let i = 0; i < this.teacherBardata.length; i++) {
+              arrsp.push({
+                name:
+                  this.teacherBardata[i].typename +
+                  "\n" +
+                  this.teacherBardata[i].averagescore,
+                value: parseFloat(this.teacherBardata[i].averagescore)
+              });
+            }
+            // console.log(arrsp);
+            if (arrsp[0].value <= 10) {
+              arrsp[0].value = arrsp[0].value * 10;
+            }
+            if (arrsp[1].value <= 10) {
+              arrsp[1].value = arrsp[1].value * 10;
+            }
+            if (arrsp[2].value <= 10) {
+              arrsp[2].value = arrsp[2].value * 10;
+            }
+            if (arrsp[3].value <= 10) {
+              arrsp[3].value = arrsp[3].value * 10;
+            }
+            if (arrsp[4].value <= 10) {
+              arrsp[4].value = arrsp[4].value * 10;
+            }
+            if (arrsp[5].value <= 10) {
+              arrsp[5].value = arrsp[5].value * 10;
+            }
+
+            if (
+              arrsp[0].value == 0 &&
+              arrsp[1].value == 0 &&
+              arrsp[2].value == 0 &&
+              arrsp[3].value == 0 &&
+              arrsp[4].value == 0 &&
+              arrsp[5].value == 0
+            ) {
+              this.flag1 = false;
+            } else {
+              this.flag1 = true;
+              this.radardata1 = arrsp;
+              setTimeout(() => {
+                this.$refs.radar1;
+              }, 1000);
+            }
+
+            Indicator.close();
+          } else {
+            console.log("暂无数据");
+          }
+        })
+        .catch(err => {
+          // console.log(err);
+          alert("接口返回错误，请重新刷新页面");
+          // window.location.reload()
+        });
+
+      // return new Promise((resolve, reject) => {
+      //   teachereValuate(start,end)
+      //     .then(res => {
+      //       if(JSON.parse(res).code == 1){
+      //         this.teacherValuate = JSON.parse(res).evaluateoverview,
+      //         this.teacherBardata = JSON.parse(res).dimensionevaluatelist
+      //         var arrsp = []
+      //         for (let i = 0; i < this.teacherBardata.length; i++) {
+      //           arrsp.push({
+      //             name:this.teacherBardata[i].typename + "\n" + this.teacherBardata[i].averagescore,
+      //             value: parseFloat(this.teacherBardata[i].averagescore)
+      //           })
+      //         }
+      //         this.radardata1 = arrsp
+      //         this.flag1 = true
+      //         this.$refs.radar1.drawLine()
+      //         Indicator.close();
+      //         resolve();
+      //       }else{
+      //         // console.log(6);
+      //         reject();
+      //       }
+      //     })
+      //     .catch(err => {
+      //       console.log(err);
+
+      //       reject();
+      //     });
+      // });
+    },
+    studentVal(start, end) {
+      queryHomepageExamdata(start, end).then(res => {
+        // console.log(JSON.parse(res));
+        // this.studentexame = JSON.parse(res).exampassingrate;
+        let lis = JSON.parse(res).exampassingrate;
+        for (var p = 0; p < lis.length; p++) {
+          let dfl2 = lis[p].dfl.replace("%", "");
+          // console.log(dfl2);
+          parseFloat(dfl2).toFixed(2);
+          lis[p].dfl = parseFloat(dfl2).toFixed(2);
+        }
+        this.studentexame = lis;
+      });
+    },
+    handleSelectcomp1() {
+      if (this.selectcomp1 == true) {
+        this.selectcomp1 = false;
+      } else {
+        this.selectcomp1 = true;
+      }
+    },
+    handleSelectcomp() {
+      if (this.selectcomp == true) {
+        this.selectcomp = false;
+      } else {
+        this.selectcomp = true;
+      }
+    },
+    // startTop() {
+    //   // if (document.documentElement.scrollTop == 590) {
+    //   //   document.body.scrollTop = document.documentElement.scrollTop = 1157;
+    //   // }else{
+    //   //   document.body.scrollTop = document.documentElement.scrollTop = 590;
+    //   // }
+    //   this.starNumber = document.documentElement.scrollTop
+
+    // },
+    // endTop() {
+    //   this.endNumber = document.documentElement.scrollTop
+    //   console.log(this.starNumber,this.endNumber);
+    //   if (this.starNumber > this.endNumber) {
+    //     //向上滑动
+    //     if (this.starNumber < 590) {
+    //       document.body.scrollTop = document.documentElement.scrollTop = 1157;
+    //     }else{
+    //       document.body.scrollTop = document.documentElement.scrollTop = 590;
+    //     }
+    //   }else{
+    //     //向下滑动
+    //     if (this.starNumber < 590) {
+    //       document.body.scrollTop = document.documentElement.scrollTop = 590;
+    //     }else{
+    //       document.body.scrollTop = document.documentElement.scrollTop = 1157;
+    //     }
+
+    //   }
+    // },
+    drawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = myCharts.init(document.getElementById("myChart2"));
+      // let myChart3 = myCharts.init(document.getElementById("myChart3"));
+      // let myChart4 = myCharts.init(document.getElementById("myChart4"));
+      window.onresize = myChart.resize;
+      var vms = this;
+      // console.log(vms.studenttype);
+      // window.onresize = myChart3.resize;
+      // window.onresize = myChart4.resize;
+      // 绘制图表
+      myChart.setOption({
+        // legend: {
+        //   // selectedMode: false, // 取消图例上的点击事件
+        //   type: "plain",
+        //   icon: "circle",
+        //   orient: "vertical",
+        //   left: "0%",
+        //   top: "15%",
+        //   align: "right",
+        //   itemGap: 15,
+        //   itemWidth: 10, // 设置宽度
+        //   itemHeight: 10, // 设置高度
+        //   symbolKeepAspect: false,
+        //   textStyle: {
+        //     color: "#000",
+        //     rich: {
+        //       name: {
+        //         verticalAlign: "right",
+        //         align: "left",
+        //         width: 35,
+        //         fontSize: 12
+        //       },
+        //       value: {
+        //         align: "left",
+        //         width: 60,
+        //         fontSize: 12
+        //       },
+        //       count: {
+        //         align: "left",
+        //         width: 80,
+        //         fontSize: 12
+        //       },
+        //       upRate: {
+        //         align: "left",
+        //         fontSize: 12,
+        //         color: "#00cf90"
+        //       },
+        //       downRate: {
+        //         align: "left",
+        //         fontSize: 12,
+        //         color: "#ff5722"
+        //       }
+        //     }
+        //   },
+        //   data: vms.datacharts.map(item => item.name),
+        //   formatter: function(name) {
+        //     let className = "upRate";
+        //     // let rateIcon = "▲";
+        //     // console.log(this.data)
+        //     if (vms.datacharts && vms.datacharts.length) {
+        //       for (var i = 0; i < vms.datacharts.length; i++) {
+        //         if (name === vms.datacharts[i].name) {
+        //           return (
+        //             "{name| " +
+        //             name +
+        //             "}  | " +
+        //             "{value| " +
+        //             vms.datacharts[i].value +
+        //             "%}"
+        //           );
+        //         }
+        //       }
+        //     }
+        //   }
+        // },
+        // series: [
+        //   {
+        //     name: "数量",
+        //     type: "pie",
+        //     radius: ["35%", "53%"],
+        //     center: ["65%", "30%"],
+        //     data: vms.datacharts,
+        //     label: {
+        //       normal: {
+        //         show: false,
+        //         position: "center",
+        //         formatter: "{text|{c}}\n{b}",
+        //         rich: {
+        //           text: {
+        //             align: "center",
+        //             verticalAlign: "middle",
+        //             padding: 8,
+        //             fontSize: 30
+        //           },
+        //           value: {
+        //             align: "center",
+        //             verticalAlign: "middle",
+        //             fontSize: 20
+        //           }
+        //         }
+        //       },
+        //       emphasis: {
+        //         show: true,
+        //         textStyle: {
+        //           fontSize: "12"
+        //         }
+        //       }
+        //     },
+        //     labelLine: {
+        //       normal: {
+        //         show: true
+        //       }
+        //     }
+        //   }
+        // ]
+        series: [
+          {
+            type: "pie",
+            color: ["#C9D5EC", "#5E7AB8", "#395275", "#7ED5BC"],
+            legendHoverLink: false,
+            hoverAnimation: false,
+            radius: ["40%", "100%"],
+            center: ["50%", "50%"],
+            avoidLabelOverlap: false,
+            label: {
+              normal: {
+                show: false,
+                position: "center"
+              }
+            },
+            labelLine: {
+              normal: {
+                show: false
+              }
+            },
+            data: (function() {
+              var res = [];
+              var len = 0;
+              for (var i = 0; i < vms.studenttype.length; i++) {
+                // console.log(vms.studenttype[i]);
+                res.push({
+                  value: vms.studenttype[i].studentsum,
+                  name: vms.studenttype[i].typename
+                });
+              }
+              delete res[0];
+              return res;
+            })()
+          }
+        ]
+      });
+    }
+  },
+  mounted() {
+    if (moment().date() < 20) {
+      if (moment().month() == 0) {
+        this.moment = 12;
+        this.mounth = "上月";
+        this.endtime = 12 + "月" + moment(12, "MM").daysInMonth() + "日";
+      } else {
+        this.moment = moment().month();
+        this.mounth = "上月";
+        this.endtime =
+          moment().month() +
+          "月" +
+          moment(moment().month(), "MM").daysInMonth() +
+          "日";
+      }
+    } else {
+      this.moment = moment().month() + 1;
+      this.mounth = "本月";
+      this.endtime =
+        moment().month() +
+        1 +
+        "月" +
+        moment(moment().month() + 1, "MM").daysInMonth() +
+        "日";
+    }
+
+    // console.log(moment().year());
+
+    //   var mo = function (e) { e.preventDefault() }
+    //   document.body.style.overflow = 'hidden'
+    //   document.addEventListener('touchmove', mo, false)// 禁止页面滑动
+
+    // const mySwiper = this.$refs.mySwiper.swiper
+    // mySwiper4.controller.control = mySwiper
+    // mySwiper.controller.control = mySwiper4
+    setTimeout(() => {
+      const mySwiper4 = this.$refs.mySwiper4;
+      // console.log(this.$refs.mySwiper4.swiper);
+      const mySwiper = this.$refs.mySwiper;
+      // mySwiper4.slideToLoop(2, 1000, false);
+      // mySwiper.slideToLoop(2, 1000, false);
+    }, 1000);
+
+    // this.teacherVal('11','11')
+    // this.teacherVal("11","11")
+    // if (moment().date() < 20) {
+    this.teacherVal(1, this.moment, this.moment);
+    // }else{
+    //   this.teacherVal(moment().month() + 1,moment().month() + 1)
+    // }
+    // Promise.all([
+
+    // ]).then(msg => {
+    //   // setTimeout(() => {
+    //     // console.log(this.$refs.radar1);
+    //   // }, 2000);
+
+    //   // this.flag1 = true
+    //   // this.$refs.radar1.drawLine()
+
+    // }).catch(err => {
+    //   console.log(err);
+    // });
+    //////////今日直通
+    workToday("", "").then(res => {
+      if (JSON.parse(res).code == 1) {
+        this.workTodaydata = JSON.parse(res).worktodaylist;
+      } else {
+        console.log("暂无数据");
+      }
+    }),
+      teacherWorkload(this.moment).then(res => {
+        if (JSON.parse(res).code == 1) {
+          this.teacherWorkData = JSON.parse(res).teacherworkload;
+          this.teachertraintypeworkload = JSON.parse(
+            res
+          ).teachertraintypeworkload;
+          this.showteacherWork = true;
+        } else {
+          console.log("暂无数据");
+        }
+      }),
+      teacherStrainingdata().then(res => {
+        // console.log(res);
+        if (JSON.parse(res).code == 1) {
+          this.teacherStringData = JSON.parse(res).teacherstrainingdata;
+          // console.log(JSON.parse(res));
+          this.showteacherString = true;
+        } else {
+          console.log("暂无数据");
+        }
+      }),
+      queryStudenteValuate(this.moment).then(res => {
+        if (JSON.parse(res).code == 1) {
+          this.studentvalue = JSON.parse(res);
+          // console.log(this.studentvalue);
+          var arrspd = [];
+          for (
+            let i = 0;
+            i < this.studentvalue.dimensionevaluatelist.length;
+            i++
+          ) {
+            arrspd.push({
+              name:
+                this.studentvalue.dimensionevaluatelist[i].typename +
+                "\n" +
+                this.studentvalue.dimensionevaluatelist[i].averagescore,
+              value: parseFloat(
+                this.studentvalue.dimensionevaluatelist[i].averagescore
+              )
+            });
+          }
+          this.radardata2 = arrspd;
+          // if (
+          //   arrspd[0].value == 0 &&
+          //   arrspd[1].value == 0 &&
+          //   arrspd[2].value == 0 &&
+          //   arrspd[3].value == 0 &&
+          //   arrspd[4].value == 0 &&
+          //   arrspd[5].value == 0
+          // ) {
+          //   this.flag2 = false;
+          // } else {
+          //   this.flag2 = true;
+          // }
+          // this.flag2 = true
+          // setTimeout(() => {
+          //   this.$refs.radar2.drawLine()
+          //   // this.$refs.radar2.drawLine()
+          // }, 1000);
+        } else {
+          console.log("暂无数据");
+        }
+      }),
+      queryHomepageRounddata(this.moment).then(res => {
+        // console.log(JSON.parse(res));
+        this.studentround = JSON.parse(res).personrounddata;
+        if (JSON.parse(res).code == 1) {
+          // console.log(JSON.parse(res));
+          // var arrs = [];
+          // arrs.push({
+          //   name: JSON.parse(res).officeroundnowsum[0].officename,
+          //   number: JSON.parse(res).officeroundnowsum[0].lzbl,
+          //   percent: JSON.parse(res).officeroundnowsum[0].lzbl,
+          //   color: "rgba(249,149,63,1)"
+          // });
+          // arrs.push({
+          //   name: JSON.parse(res).officeroundnowsum[1].officename,
+          //   number: JSON.parse(res).officeroundnowsum[1].lzbl,
+          //   percent: JSON.parse(res).officeroundnowsum[1].lzbl,
+          //   color: "rgba(249,149,63,0.70)"
+          // });
+          // arrs.push({
+          //   name: JSON.parse(res).officeroundnowsum[2].officename,
+          //   number: JSON.parse(res).officeroundnowsum[2].lzbl,
+          //   percent: JSON.parse(res).officeroundnowsum[2].lzbl,
+          //   color: "rgba(249,149,63,0.40)"
+          // });
+          // this.barleft = arrs;
+          // var arrsd = [];
+          // arrsd.push({
+          //   name: JSON.parse(res).officeroundnowsum[
+          //     JSON.parse(res).officeroundnowsum.length - 3
+          //   ].officename,
+          //   number: JSON.parse(res).officeroundnowsum[
+          //     JSON.parse(res).officeroundnowsum.length - 3
+          //   ].lzbl,
+          //   percent: JSON.parse(res).officeroundnowsum[
+          //     JSON.parse(res).officeroundnowsum.length - 3
+          //   ].lzbl,
+          //   color: "rgba(249,149,63,1)"
+          // });
+          // arrsd.push({
+          //   name: JSON.parse(res).officeroundnowsum[
+          //     JSON.parse(res).officeroundnowsum.length - 2
+          //   ].officename,
+          //   number: JSON.parse(res).officeroundnowsum[
+          //     JSON.parse(res).officeroundnowsum.length - 2
+          //   ].lzbl,
+          //   percent: JSON.parse(res).officeroundnowsum[
+          //     JSON.parse(res).officeroundnowsum.length - 2
+          //   ].lzbl,
+          //   color: "rgba(249,149,63,1)"
+          // });
+          // arrsd.push({
+          //   name: JSON.parse(res).officeroundnowsum[
+          //     JSON.parse(res).officeroundnowsum.length - 1
+          //   ].officename,
+          //   number: JSON.parse(res).officeroundnowsum[
+          //     JSON.parse(res).officeroundnowsum.length - 1
+          //   ].lzbl,
+          //   percent: JSON.parse(res).officeroundnowsum[
+          //     JSON.parse(res).officeroundnowsum.length - 1
+          //   ].lzbl,
+          //   color: "rgba(249,149,63,1)"
+          // });
+          // this.barright = arrsd;
+          // // console.log(arrsd);
+
+          this.showbar = true;
+        } else {
+          console.log("暂无数据");
+        }
+      }),
+      queryHomepageTraindata(this.moment).then(res => {
+        if (JSON.parse(res).code == 1) {
+          // console.log(JSON.parse(res));
+          this.studenttrain = JSON.parse(res);
+          this.showtrain = true;
+          this.showstudentexame = true;
+        } else {
+          console.log("暂无数据");
+        }
+      });
+    if (moment().date() < 20) {
+      this.studentVal(this.moment, this.moment);
+    } else {
+      this.studentVal(moment().month() + 1, moment().month() + 1);
+    }
+    queryHomepageStudentdata(this.moment).then(res => {
+      // console.log(JSON.parse(res));
+      this.studenttype = JSON.parse(res).studatalist;
+      // console.log(this.studenttype);
+      this.studentsubject = JSON.parse(res).studensubjectdata;
+      this.studentpie = true;
+      setTimeout(() => {
+        this.drawLine();
+      }, 1000);
+    });
+    querySkillCentredata().then(res => {
+      this.skillcentrdata = JSON.parse(res).skillcentredata;
+
+      if (!this.skillcentrdata) {
+        this.skillcentrdata = {
+          byhdcs: 0,
+          bysyrc: 0,
+          jnzxqc: 0,
+          jnzxmj: 0
+        };
+        var bdd = [];
+        bdd.push({
+          desc: "本月活动次数",
+          number: 0
+        });
+        bdd.push({
+          desc: "本月使用人次",
+          number: 0
+        });
+        bdd.push({
+          desc: "技能中心器材",
+          number: 0
+        });
+        bdd.push({
+          desc: "技能中心面积",
+          number: 0
+        });
+        this.skilldata = bdd;
+      } else {
+        var bdd = [];
+        bdd.push({
+          desc: "本月活动次数",
+          number: JSON.parse(res).skillcentredata.byhdcs
+        });
+        bdd.push({
+          desc: "本月使用人次",
+          number: JSON.parse(res).skillcentredata.bysyrc
+        });
+        bdd.push({
+          desc: "技能中心器材",
+          number: JSON.parse(res).skillcentredata.jnzxqc
+        });
+        bdd.push({
+          desc: "技能中心面积",
+          number: JSON.parse(res).skillcentredata.jnzxmj
+        });
+        this.skilldata = bdd;
+      }
+    });
+    queryActivitydata().then(res => {
+      (this.historyactive = JSON.parse(res).historyactivitylist),
+        (this.threeactive = JSON.parse(res).threedaysactivitylist);
+      // console.log(JSON.parse(res).historyactivitylist);
+      if (this.historyactive) {
+        // console.log("1");
+      }
+    });
+    queryProposalsheetdata().then(res => {
+      this.userdels = JSON.parse(res).dcls;
+    });
+    queryProposalsheetdata2().then(res => {
+      // console.log(JSON.parse(res));
+      this.proposaldata = JSON.parse(res).proposalyeardata;
+    });
+    this.hospitalName = Cookies.get("hos_name");
+    this.userName = Cookies.get("user_name");
+    // const mySwiper4 = this.$refs.mySwiper4.swiper
+    // const mySwiper = this.$refs.mySwiper.swiper
+    // mySwiper4.slideToLoop(2, 1000, false);
+    // mySwiper.slideToLoop(2, 1000, false);
+  },
+  created() {
+    // console.log(document.body.clientHeight);
+    this.winHeight = document.body.clientHeight;
+    teacherData().then(res => {
+      // console.log(JSON.parse(res));
+      if (JSON.parse(res).code == 1) {
+        this.teacherDatalist = JSON.parse(res).teacherdata;
+        this.cycleData.lspxl = JSON.parse(res).teacherdata.lspxl;
+        this.cycleData.zrpxl = JSON.parse(res).teacherdata.zrpxl;
+        this.cycleData.fzrpxl = JSON.parse(res).teacherdata.fzrpxl;
+        this.cycleData.zzpxl = JSON.parse(res).teacherdata.zzpxl;
+        // console.log(this.cycleData);
+      } else {
+        console.log("暂无数据");
+      }
+    });
+  },
+  components: {
+    swiper,
+    swiperSlide,
+    radar,
+    cycle,
+    barlabel
+  }
+  // computed: {
+  //   swiper() {
+  //     return this.$refs.mySwiper.swiper;
+  //   }
+  // }
+};
+</script>  
+  
+<style lang="less" scoped>
+.tabletop {
+  margin-top: 0.2rem;
+  .topname {
+    color: #474c63;
+    text-align: left;
+    padding-left: 0.1rem;
+  }
+}
+.end {
+  background: #ffffff;
+  margin-top: 0.09rem;
+  padding-bottom: 0.1rem;
+
+  .end_top {
+    border-left: 3px solid #277fff;
+    margin-left: 0.15rem;
+    padding-left: 0.05rem;
+    margin-bottom: 0.1rem;
+
+    p {
+      font-family: PingFangSC-Medium;
+      font-size: 0.16rem;
+      color: #474c63;
+      letter-spacing: 0;
+      // line-height: 18px;
+    }
+  }
+
+  .end_end {
+    width: 3rem;
+    margin: 0 auto;
+
+    .end_th {
+      display: flex;
+      align-items: center;
+
+      p {
+        font-family: PingFangSC-Medium;
+        font-size: 0.13rem;
+        color: #212121;
+        letter-spacing: 0;
+        // line-height: 16px;
+        border: 1px solid #f0f0f7;
+        height: 0.35rem;
+        line-height: 0.35rem;
+        width: 1rem;
+        text-align: center;
+      }
+    }
+
+    .end_td {
+      display: flex;
+      align-items: center;
+
+      p {
+        font-family: PingFangSC-Regular;
+        font-size: 0.13rem;
+        color: #212121;
+        letter-spacing: 0;
+        // line-height: 16px;
+        border: 1px solid #f0f0f7;
+        height: 0.35rem;
+        line-height: 0.35rem;
+        width: 1rem;
+        text-align: center;
+      }
+    }
+  }
+}
+.endtable {
+  overflow: auto;
+  // height: 4rem;
+}
+.flex_end {
+  display: flex;
+  align-items: flex-end;
+}
+.item {
+  display: inline-block;
+}
+
+.nav {
+  padding: 10px;
+}
+
+.main {
+  // margin-top: 2.7rem;
+  overflow: hidden;
+  position: absolute;
+  z-index: 2;
+  top: 0.6rem;
+  /deep/.mint-tab-item-label {
+    font-size: 0.16rem;
+  }
+  .dropdown {
+    position: absolute;
+    top: -0.3rem;
+    left: 0;
+    z-index: 2;
+    right: 0;
+    margin: auto;
+    p {
+      text-align: center;
+      font-size: 14px;
+      color: #dddddd;
+    }
+  }
+}
+
+.link {
+  color: inherit;
+  padding: 20px;
+  display: block;
+}
+.main_header {
+  background-image: url("../../../assets/images/back.png");
+  background-size: 100%;
+  height: 2.07rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+.main_top {
+  background-image: url("../../../assets/images/back.png");
+  background-size: 100%;
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  // padding-top: 0.16rem;
+  // padding-bottom: 0.16rem;
+  height: 5.3%;
+  padding-top: 2.8%;
+  padding-bottom: 2.8%;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  .title {
+    font-family: PingFangSC-Medium;
+    font-size: 0.2rem;
+    color: #ffffff;
+    letter-spacing: 0;
+    text-align: center;
+    // line-height: 0.22rem;
+    margin-left: 0.2rem;
+  }
+  .name {
+    font-family: PingFangSC-Medium;
+    font-size: 0.14rem;
+    color: #ffffff;
+    letter-spacing: 0;
+    text-align: center;
+    // line-height: 14px;
+    margin-left: auto;
+    margin-right: 0.15rem;
+  }
+  .icon {
+    width: 0.3rem;
+    height: 0.3rem;
+  }
+  .select {
+    width: 0.28rem;
+    height: 0.28rem;
+  }
+  .point {
+    width: 0.15rem;
+    height: 0.12rem;
+    background: #ff6962;
+    border-radius: 0.1rem;
+    position: absolute;
+    right: 0.08rem;
+    top: 0.18rem;
+    p {
+      font-size: 0.1rem;
+      color: #ffffff;
+      line-height: 0.12rem;
+      text-align: center;
+    }
+  }
+}
+.main_today {
+  width: 3.55rem;
+  background: #ffffff;
+  margin: 0 auto;
+  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
+  border-radius: 5px;
+  border-radius: 5px;
+  // margin-top: 0.05rem;
+  // margin-top: 4.89%;
+  // height: 1.8rem;
+  // height: 27.9%;
+  // margin-bottom: 0.1rem;
+  .main_today_top {
+    display: flex;
+    align-items: center;
+    margin-right: 0.16rem;
+    margin-left: 0.12rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.11rem;
+    .today_img {
+      height: 0.24rem;
+      width: 0.24rem;
+    }
+    .todaywork_title {
+      font-family: PingFangSC-Medium;
+      font-size: 0.18rem;
+      color: #212121;
+      letter-spacing: 0;
+      text-align: center;
+      // line-height: 18px;
+      // margin-left: 0.1rem;
+      margin-right: auto;
+    }
+    .number {
+      display: flex;
+      align-items: center;
+      width: 0.65rem;
+      height: 0.25rem;
+      background: #f0f0f7;
+      border-radius: 12.5px;
+      border-radius: 12.5px;
+      p {
+        font-family: PingFangSC-Medium;
+        font-size: 0.15rem;
+        color: #277fff;
+        letter-spacing: 0;
+        margin-left: 0.08rem;
+        margin-right: 0.06rem;
+        margin-left: auto;
+      }
+      img {
+        width: 0.14rem;
+        height: 0.14rem;
+        margin-right: auto;
+      }
+    }
+    .change_img {
+      width: 0.16rem;
+      height: 0.16rem;
+      margin-left: auto;
+    }
+  }
+  .main_today_bar {
+    margin-left: 0.16rem;
+    margin-right: 0.18rem;
+    // padding-bottom: 0.05rem;
+    .tabbar {
+      display: flex;
+      align-items: center;
+      padding-bottom: 0.1rem;
+      border-bottom: 1px solid #f0f0f7;
+      padding-top: 0.1rem;
+      .title {
+        font-family: PingFangSC-Regular;
+        font-size: 0.13rem;
+        color: #212121;
+        letter-spacing: 0;
+        // line-height: 18px;
+        margin-right: auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .time {
+        font-family: PingFangSC-Regular;
+        font-size: 0.12rem;
+        color: #9397ad;
+        letter-spacing: 0;
+        // line-height: 13px;
+      }
+    }
+  }
+}
+.teacher {
+  // /deep/ .mint-tab-item-label{
+  //   // font-family: PingFangSC-Medium;
+  //   font-size: 0.18rem;
+  //   color: #212121;
+  //   letter-spacing: 0;
+  //   // line-height: 18px;
+  // }
+  // height: 4.3rem;
+  margin-top: 1.779%;
+  background: #ffffff;
+  /deep/ .swiper-slide {
+    margin-left: 1px;
+  }
+  .teacher_header {
+    display: flex;
+    align-items: center;
+    // padding-top: 0.1rem;
+    // padding-bottom: 0.1rem;
+    border-bottom: 1px solid #f0f0f7;
+    // background: #ffffff;
+    // background: url("../../../assets/images/maintial.png") no-repeat;
+    background-size: 1rem 0.3rem;
+    margin-left: 0.15rem;
+    // padding-left: 0.15rem;
+    width: 1rem;
+    height: 0.3rem;
+    position: absolute;
+    p {
+      font-family: PingFangSC-Medium;
+      font-size: 0.18rem;
+      color: #ffffff;
+      letter-spacing: 0;
+      text-align: center;
+      // line-height: 18px;
+      position: absolute;
+      // width: 1rem;
+      left: 0.15rem;
+    }
+    img {
+      width: 1rem;
+    }
+  }
+  .teacher_main_box {
+    // width: 3.55rem;
+    // height: 3.51rem;
+    // background: #ffffff;
+    // box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
+    // border-radius: 5px;
+    // border-radius: 5px;
+    // margin: 0 auto;
+    margin-left: 0.1rem;
+    // margin-top: 0.05rem;
+    // margin-bottom: 0.1rem;
+    // /deep/ .swiper-slide{
+    //   width: auto !important;
+    // }
+    .box1_top {
+      display: flex;
+      align-items: center;
+      padding-top: 0.1rem;
+      // margin-bottom: 0.2rem;
+      margin-right: 0.15rem;
+      .title {
+        border-left: 3px solid #277fff;
+        margin-left: 0.1rem;
+        display: flex;
+        align-items: center;
+        height: 0.18rem;
+        line-height: 0.18rem;
+        p {
+          font-family: PingFangSC-Medium;
+          font-size: 0.16rem;
+          color: #474c63;
+          margin-left: 0.1rem;
+          letter-spacing: 0;
+          // line-height: 18px;
+        }
+        a {
+          font-family: PingFangSC-Medium;
+          font-size: 0.16rem;
+          color: #474c63;
+          margin-left: 0.1rem;
+          letter-spacing: 0;
+        }
+      }
+      p {
+        font-family: PingFangSC-Regular;
+        font-size: 0.15rem;
+        color: #474c63;
+        letter-spacing: 0;
+        text-align: right;
+        // line-height: 15px;
+        margin-left: auto;
+      }
+      a {
+        font-family: PingFangSC-Regular;
+        font-size: 0.15rem;
+        color: #474c63;
+        letter-spacing: 0;
+        text-align: right;
+        // line-height: 15px;
+        margin-left: auto;
+      }
+      img {
+        width: 0.15rem;
+        height: 0.15rem;
+      }
+    }
+
+    .box1_img {
+      width: 2.8rem;
+      display: block;
+      margin: 0 auto;
+      // padding-bottom: 0.2rem;
+      // height: 80%;
+    }
+    .boxshadow {
+      width: 3.3rem;
+      // height: 3.16rem;
+      // height: 5rem;
+      background: #ffffff;
+      box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
+      border-radius: 5px;
+      border-radius: 5px;
+      // margin: 0 auto;
+      // margin-top: 0.05rem;
+      margin-bottom: 0.1rem;
+      margin-top: 0.1rem;
+      // overflow: hidden;
+    }
+  }
+}
+.student {
+  background: #ffffff;
+  padding-top: 0.1rem;
+  height: 100%;
+  .student_header {
+    display: flex;
+    align-items: center;
+    // padding-top: 0.1rem;
+    // padding-bottom: 0.1rem;
+    border-bottom: 1px solid #f0f0f7;
+    background: #ffffff;
+    background: url("../../../assets/images/maintial.png") no-repeat;
+    background-size: 1rem 0.3rem;
+    margin-left: 0.15rem;
+    padding-left: 0.15rem;
+    width: 1rem;
+    height: 0.3rem;
+    p {
+      font-family: PingFangSC-Medium;
+      font-size: 0.18rem;
+      color: #ffffff;
+      letter-spacing: 0;
+      text-align: center;
+      // line-height: 18px;
+    }
+    img {
+      width: 0.24rem;
+      height: 0.24rem;
+      margin-left: 0.21rem;
+      margin-right: 0.1rem;
+    }
+  }
+  .student_main {
+    height: 84%;
+    /deep/ .swiper-container {
+      width: 100%;
+      height: 100%;
+    }
+    /deep/ .swiper-slide {
+      text-align: center;
+      background: #fff;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      transition: 300ms;
+      transform: scale(0.8);
+      // width: 3.5rem !important;
+    }
+    /deep/ .swiper-slide-active,
+    .swiper-slide-duplicate-active {
+      transform: scale(1);
+    }
+    .swiper_box {
+      display: flex;
+      // align-items: center;
+      .box_left {
+        height: 3.76rem;
+        width: 0.23rem;
+        background: #ffffff;
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
+        border-radius: 5px;
+        border-radius: 5px;
+        margin-top: 0.22rem;
+      }
+      .box_right {
+        height: 3.76rem;
+        width: 0.23rem;
+        background: #ffffff;
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
+        border-radius: 5px;
+        border-radius: 5px;
+        margin-top: 0.22rem;
+      }
+    }
+
+    .student_main_box {
+      width: 3.8rem;
+      // height: 4.06rem;
+      // background: #dddddd;
+      // box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
+      border-radius: 5px;
+      border-radius: 5px;
+      margin: 0 auto;
+      // margin-top: 0.05rem;
+      overflow: hidden;
+      .box1_top {
+        display: flex;
+        align-items: center;
+        margin-top: 0.1rem;
+        margin-bottom: 0.1rem;
+        width: 3rem;
+        p {
+          font-family: PingFangSC-Regular;
+          font-size: 0.15rem;
+          color: #474c63;
+          letter-spacing: 0;
+          text-align: right;
+          // line-height: 15px;
+          margin-left: auto;
+        }
+        img {
+          width: 0.15rem;
+          height: 0.15rem;
+          margin-right: 0.15rem;
+        }
+      }
+      .box1_img {
+        width: 2.8rem;
+        height: 3.41rem;
+        display: block;
+        margin: 0 auto;
+        // padding-bottom: 0.2rem;
+        // height: 80%;
+      }
+      .boxshadow {
+        width: 3rem;
+        height: 90%;
+        // height: 3.51rem;
+        background: #ffffff;
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
+        border-radius: 5px;
+        border-radius: 5px;
+        margin: 0 auto;
+        margin-top: 0.05rem;
+        margin-bottom: 0.1rem;
+      }
+    }
+  }
+}
+.skill {
+  height: 100%;
+  .skill_top {
+    // display: flex;
+    // align-items: center;
+    padding-top: 0.12rem;
+    padding-bottom: 0.1rem;
+    background-image: url(../../../assets/images/indexback.png);
+    background-size: 100%;
+    padding-left: 0.2rem;
+    padding-right: 0.15rem;
+    p {
+      color: #ffffff;
+    }
+    .top {
+      display: flex;
+      align-items: center;
+    }
+    .middle {
+      display: flex;
+      align-items: center;
+      .middle_left {
+        text-align: center;
+        margin-right: auto;
+        .middle_left_top {
+          margin-bottom: 0.2rem;
+        }
+        .number {
+          font-family: PingFangSC-Regular;
+          font-size: 0.38rem;
+          color: #ffffff;
+          letter-spacing: 0;
+          // line-height: 38px;
+        }
+        .desc {
+          font-family: PingFangSC-Regular;
+          font-size: 0.13rem;
+          color: #ffffff;
+          letter-spacing: 0;
+          // line-height: 13px;
+        }
+      }
+      .middle_right {
+        .middle_right_single {
+          display: flex;
+          align-items: center;
+          margin-top: 0.08rem;
+          padding-bottom: 0.09rem;
+          .desc {
+            margin-right: 0.32rem;
+          }
+          p {
+            font-family: PingFangSC-Regular;
+            font-size: 0.13rem;
+            color: #ffffff;
+            letter-spacing: 0;
+            // line-height: 13px;
+          }
+        }
+      }
+    }
+    .skill_top_img {
+      width: 0.24rem;
+      height: 0.24rem;
+      margin-left: 0.2rem;
+      margin-right: 0.08rem;
+    }
+    .title {
+      font-family: PingFangSC-Medium;
+      font-size: 0.2rem;
+      // color: #212121;
+      letter-spacing: 0;
+    }
+    .more {
+      font-family: PingFangSC-Regular;
+      font-size: 0.15rem;
+      // color: #474c63;
+      letter-spacing: 0;
+      margin-left: auto;
+      margin-right: 0.06rem;
+    }
+    .arrow {
+      width: 0.06rem;
+      height: 0.09rem;
+      margin-right: 0.15rem;
+    }
+  }
+  .skill_back {
+    width: 100%;
+    height: 1.73rem;
+  }
+  .news {
+    // height: 2.1rem;
+    .news_detial {
+      display: flex;
+      align-items: center;
+      margin-left: 0.2rem;
+      margin-right: 0.2rem;
+      margin-top: 0.05rem;
+      margin-bottom: 0.05rem;
+      .news_detial_left {
+        .title {
+          font-family: PingFangSC-Regular;
+          font-size: 0.16rem;
+          color: #212121;
+          letter-spacing: 0;
+          line-height: 26px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+        .time {
+          font-family: PingFangSC-Regular;
+          font-size: 0.13rem;
+          color: #9397ad;
+          letter-spacing: 0;
+          line-height: 13px;
+        }
+      }
+      img {
+        width: 1rem;
+        height: 0.7rem;
+        border-radius: 5px;
+        margin-left: 0.15rem;
+        min-width: 1rem;
+      }
+    }
+  }
+  .show_more {
+    width: 1.2rem;
+    height: 0.26rem;
+    background: #f0f0f7;
+    border-radius: 13px;
+    border-radius: 13px;
+    margin: 0 auto;
+    margin-top: 0.05rem;
+    margin-bottom: 0.15rem;
+    p {
+      font-family: PingFangSC-Regular;
+      font-size: 0.14rem;
+      color: #9397ad;
+      letter-spacing: 0;
+      line-height: 0.26rem;
+      text-align: center;
+    }
+  }
+}
+
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+.select-modal {
+  width: 1.34rem;
+  height: 1.2rem;
+  background-color: #fff;
+  padding-top: 0.1rem;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.15rem;
+  border-radius: 0.05rem;
+  .sj {
+    position: absolute;
+    top: -0.1rem;
+    right: 0.05rem;
+    border-top: 0.05rem solid transparent;
+    border-left: 0.05rem solid transparent;
+    border-right: 0.05rem solid transparent;
+    border-bottom: 0.05rem solid #fff;
+  }
+  p {
+    line-height: 0.35rem;
+    padding-left: 0.3rem;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #212121;
+    span {
+      background: #ff6962;
+      border-radius: 0.075rem;
+      color: #fff;
+      font-size: 13px;
+      display: inline-block;
+      width: 0.22rem;
+      height: 0.15rem;
+      line-height: 0.15rem;
+      text-align: center;
+      margin-left: 0.05rem;
+    }
+  }
+}
+.box2_top {
+  display: flex;
+  align-items: center;
+  margin-top: 0.12rem;
+  width: 3rem;
+  // margin-left: 0.2rem;
+  // margin-right: 0.15rem;
+  .title {
+    font-family: PingFangSC-Regular;
+    font-size: 0.15rem;
+    color: #212121;
+    letter-spacing: 0;
+    // line-height: 15px;
+    border-left: 3px solid #277fff;
+    padding-left: 0.05rem;
+    margin-left: 0.1rem;
+    height: 0.15rem;
+    line-height: 0.15rem;
+  }
+  .more {
+    font-family: PingFangSC-Regular;
+    font-size: 0.15rem;
+    color: #474c63;
+    letter-spacing: 0;
+    text-align: right;
+    // line-height: 15px;
+    margin-left: auto;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    .desc {
+      font-size: 0.1rem;
+      color: #dddddd;
+      margin-left: 0.05rem;
+    }
+  }
+  img {
+    width: 0.15rem;
+    height: 0.15rem;
+    margin-right: 0.1rem;
+  }
+}
+.complain {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  .complain_win {
+    width: 3rem;
+    height: 2rem;
+    background: #ffffff;
+    border-radius: 10px;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    .complain_top {
+      padding-top: 0.17rem;
+      padding-bottom: 0.16rem;
+      border-bottom: 1px solid #f0f0f7;
+      margin-left: 0.15rem;
+      margin-right: 0.15rem;
+      p {
+        font-family: PingFangSC-Regular;
+        font-size: 0.16rem;
+        color: #212121;
+        letter-spacing: 0;
+        text-align: center;
+        // line-height: 16px;
+      }
+      img {
+        width: 0.12rem;
+        height: 0.12rem;
+        position: absolute;
+        top: 0.2rem;
+        right: 0.2rem;
+      }
+    }
+    .complain_main {
+      display: flex;
+      align-items: center;
+      margin-left: 0.2rem;
+      margin-right: 0.2rem;
+      margin-top: 0.3rem;
+      margin-bottom: 0.48rem;
+      .complain_main_left {
+        padding-right: 0.19rem;
+        border-right: 2px solid #f0f0f7;
+        .number {
+          font-family: PingFangSC-Medium;
+          font-size: 0.5rem;
+          color: #277fff;
+          letter-spacing: 0;
+          text-align: center;
+          line-height: 0.5rem;
+        }
+        .desc {
+          font-family: PingFangSC-Regular;
+          font-size: 0.13rem;
+          color: #212121;
+          letter-spacing: 0;
+          text-align: center;
+          line-height: 0.15rem;
+          margin-top: 0.07rem;
+        }
+      }
+      .complain_main_right {
+        padding-left: 0.14rem;
+        .complain_main_right_top {
+          display: flex;
+          align-items: center;
+          padding-bottom: 0.13rem;
+          p {
+            font-family: PingFangSC-Regular;
+            font-size: 0.13rem;
+            color: #212121;
+            letter-spacing: 0;
+            line-height: 0.13rem;
+          }
+        }
+        .complain_main_right_end {
+          display: flex;
+          align-items: center;
+          padding-top: 0.13rem;
+          p {
+            font-family: PingFangSC-Regular;
+            font-size: 0.13rem;
+            color: #212121;
+            letter-spacing: 0;
+            line-height: 0.13rem;
+          }
+        }
+      }
+    }
+  }
+}
+.teacher_train {
+  position: relative;
+  .teacher_train_main {
+    // margin-left: 0.23rem;
+    // margin-right: 0.22rem;
+    // margin-top: 0.3rem;
+    // margin-bottom: 0.4rem;
+    width: 3.1rem;
+    height: 2.05rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    .number {
+      font-family: PingFangSC-Medium;
+      font-size: 0.5rem;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 0.5rem;
+    }
+    .desc {
+      font-family: PingFangSC-Regular;
+      font-size: 0.15rem;
+      color: #212121;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 0.15rem;
+      margin-top: 0.1rem;
+    }
+    .flex {
+      display: flex;
+      align-items: center;
+    }
+    .single {
+      width: 1.5rem;
+      height: 1.02rem;
+    }
+    .train_main_top_left {
+      border-right: 1px solid #f0f0f7;
+      border-bottom: 1px solid #f0f0f7;
+    }
+    .train_main_end_right {
+      border-left: 1px solid #f0f0f7;
+      border-top: 1px solid #f0f0f7;
+      padding-top: 0.28rem;
+    }
+    .train_main_end_left {
+      padding-top: 0.28rem;
+    }
+    .train_main_top {
+      .number {
+        color: #7ed5bc;
+      }
+    }
+    .train_main_end {
+      .number {
+        color: #326699;
+      }
+    }
+  }
+}
+.teacher_detial_main {
+  img {
+    width: 2.8rem;
+    display: block;
+    margin: 0 auto;
+  }
+  .tdetial_main {
+    width: 3.3rem;
+    height: 3rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    .detial_main_top {
+      display: flex;
+      align-items: center;
+      margin-left: 0.15rem;
+      margin-right: 0.15rem;
+      margin-top: 0.3rem;
+      .detial_main_top_left {
+        text-align: center;
+        margin-right: auto;
+        .topmain {
+          display: flex;
+          align-items: center;
+        }
+        .number {
+          opacity: 0.98;
+          font-family: PingFangSC-Medium;
+          font-size: 0.28rem;
+          color: #239eff;
+          letter-spacing: 0;
+          margin-left: 0.1rem;
+          // line-height: 28px;
+        }
+        .desc {
+          font-family: PingFangSC-Regular;
+          font-size: 0.15rem;
+          color: #212121;
+          letter-spacing: 0;
+          text-align: center;
+          // line-height: 15px;
+        }
+      }
+    }
+    .detial_main_middle {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      text-align: center;
+      margin-top: 0.15rem;
+      margin-bottom: 0.3rem;
+      .number {
+        font-family: PingFangSC-Medium;
+        font-size: 0.3rem;
+        // color: #7ED5BC;
+        letter-spacing: 0;
+        text-align: center;
+        // line-height: 30px;
+      }
+      .desc {
+        font-family: PingFangSC-Regular;
+        font-size: 0.13rem;
+        color: #212121;
+        letter-spacing: 0;
+        text-align: center;
+        // line-height: 13px;
+        margin-bottom: 0.1rem;
+      }
+    }
+    .detial_main_end {
+      display: flex;
+      align-items: center;
+      // margin-left: 0.15rem;
+      // padding-top: 0.1rem;
+      // border-top: 1px solid #dddddd;
+      .number {
+        font-size: 0.3rem;
+        margin-left: 0.1rem;
+      }
+    }
+  }
+}
+.teacher_score_main {
+  // margin-top: 0.2rem;
+  // margin-left: 0.17rem;
+  // margin-right: 0.2rem;
+  width: 3.1rem;
+  // height: 3.2rem;
+  position: absolute;
+  // top: 0;
+  left: 0.1rem;
+  right: 0;
+  bottom: 0;
+  top: 0.1rem;
+  margin: auto;
+  // margin-top: 0.1rem;
+  .blocks {
+    width: 3.1rem;
+    height: 1.49rem;
+    display: block;
+    position: absolute;
+    top: 0;
+  }
+  .bottom {
+    font-family: PingFangSC-Regular;
+    font-size: 0.12rem;
+    color: #212121;
+    letter-spacing: 0;
+    text-align: center;
+    // line-height: 15px;
+  }
+  .left {
+    .top {
+      font-family: PingFangSC-Medium;
+      font-size: 0.2rem;
+      color: #7ed5bc;
+      letter-spacing: 0;
+      text-align: center;
+      // line-height: 50px;
+    }
+  }
+  .right {
+    .top {
+      font-family: PingFangSC-Medium;
+      font-size: 0.2rem;
+      color: #326699;
+      letter-spacing: 0;
+      text-align: center;
+      // line-height: 50px;
+      span {
+        font-family: PingFangSC-Medium;
+        font-size: 0.18rem;
+        color: #326699;
+        letter-spacing: 0;
+        text-align: center;
+        // line-height: 50px;
+      }
+    }
+  }
+  .teacher_score_main_top {
+    position: relative;
+    // margin-top: 0.5rem;
+    // padding-top: 0.1rem;
+    .top_end {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      border-bottom: 1px solid #f0f0f7;
+      padding-bottom: 0.1rem;
+    }
+    .number {
+      font-family: PingFangSC-Medium;
+      font-size: 0.5rem;
+      color: #f9953f;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 0.5rem;
+    }
+    .desc {
+      font-family: PingFangSC-Regular;
+      font-size: 0.15rem;
+      color: #212121;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 0.15rem;
+      margin-top: 0.06rem;
+    }
+  }
+  .teacher_score_main_end {
+    position: relative;
+    .end_top {
+      display: flex;
+      align-items: center;
+      margin-top: 0.115rem;
+      p {
+        font-family: PingFangSC-Regular;
+        font-size: 0.15rem;
+        color: #474c63;
+        letter-spacing: 0;
+        margin-left: auto;
+        // text-align: right;
+        // line-height: 15px;
+      }
+      a {
+        font-family: PingFangSC-Regular;
+        font-size: 0.15rem;
+        color: #474c63;
+        letter-spacing: 0;
+        margin-left: auto;
+      }
+      img {
+        width: 0.15rem;
+        height: 0.15rem;
+      }
+    }
+    .end_bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      margin-top: 0.2rem;
+    }
+  }
+  .detial {
+    font-family: PingFangSC-Regular;
+    font-size: 0.15rem;
+    color: #212121;
+    letter-spacing: 0;
+    line-height: 0.15rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.2rem;
+  }
+  .flex_betwen {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .flex_single {
+      .number {
+        font-family: PingFangSC-Medium;
+        font-size: 0.38rem;
+        letter-spacing: 0;
+        line-height: 0.38rem;
+        text-align: center;
+      }
+      .desc {
+        font-family: PingFangSC-Regular;
+        font-size: 0.13rem;
+        color: #212121;
+        letter-spacing: 0;
+        line-height: 0.13rem;
+        text-align: center;
+        margin-top: 0.05rem;
+      }
+    }
+  }
+  .score_end {
+    font-family: PingFangSC-Regular;
+    font-size: 0.13rem;
+    color: #9397ad;
+    letter-spacing: 0;
+    line-height: 0.2rem;
+    margin-top: 0.15rem;
+    // margin-bottom: 0.2rem;
+  }
+}
+.student_train_main {
+  // margin-top: 0.3rem;
+  padding-bottom: 0.16rem;
+  .student_train_single {
+    display: flex;
+    align-items: flex-end;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    margin-bottom: 0.3rem;
+    padding-top: 0.3rem;
+    .student_single_left {
+      .number {
+        font-family: PingFangSC-Medium;
+        font-size: 0.38rem;
+        letter-spacing: 0;
+        line-height: 0.38rem;
+      }
+      .desc {
+        font-family: PingFangSC-Regular;
+        font-size: 0.13rem;
+        color: #212121;
+        letter-spacing: 0;
+        line-height: 0.13rem;
+        margin-top: 0.05rem;
+        text-align: left;
+      }
+    }
+  }
+  .middle {
+    border-top: 1px solid #f0f0f7;
+    border-bottom: 1px solid #f0f0f7;
+    margin-bottom: 0;
+    padding-bottom: 0.3rem;
+  }
+  .student_single_right {
+    display: flex;
+    flex-wrap: wrap;
+    width: 1.5rem;
+    justify-content: space-between;
+    margin-left: auto;
+    p {
+      font-family: PingFangSC-Regular;
+      font-size: 0.13rem;
+      color: #212121;
+      letter-spacing: 0;
+      line-height: 0.13rem;
+      margin-bottom: 0.22rem;
+      width: 50%;
+    }
+  }
+}
+.student_score_main {
+  margin-top: 0.2rem;
+  img {
+    width: 2.8rem;
+    height: 3.41rem;
+    display: block;
+    margin: 0 auto;
+  }
+  .student_score_main_desc {
+    margin-top: 0.15rem;
+    margin-bottom: 0.2rem;
+    .score_main_single {
+      display: flex;
+      align-items: center;
+      margin-left: 0.15rem;
+      margin-right: 0.15rem;
+      margin-bottom: 0.1rem;
+      .ddes {
+        color: #9397ad;
+        font-size: 0.1rem;
+      }
+      .answer {
+        color: #239eff;
+      }
+      p {
+        font-size: 0.13rem;
+      }
+      .answer {
+        margin-left: auto;
+      }
+    }
+  }
+}
+.student_exam_main {
+  img {
+    width: 2.8rem;
+    height: 3.41rem;
+    display: block;
+    margin: 0 auto;
+  }
+}
+.student_rotation_main {
+  margin-top: 0.3rem;
+  img {
+    width: 2.8rem;
+    height: 3.41rem;
+    display: block;
+    margin: 0 auto;
+  }
+  .desc {
+    font-family: PingFangSC-Regular;
+    font-size: 0.12rem;
+    color: #9397ad;
+    letter-spacing: 0;
+    // line-height: 18px;
+    margin-top: 0.18rem;
+    margin-bottom: 0.17rem;
+    text-align: center;
+  }
+  .rotation_desc {
+    margin-bottom: 0.3rem;
+    margin-top: 0.18rem;
+    .title {
+      font-family: PingFangSC-Regular;
+      font-size: 0.15rem;
+      color: #212121;
+      letter-spacing: 0;
+      // line-height: 15px;
+    }
+    .desc {
+      font-size: 0.1rem;
+      margin: 0;
+      margin-bottom: 0.1rem;
+    }
+    .rotation_desc_main {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      .rotation_desc_middle {
+        border-left: 1px solid #f0f0f7;
+        // border-right: 1px solid #f0f0f7;
+        padding-left: 0.21rem;
+        padding-right: 0.21rem;
+      }
+      .number {
+        font-family: PingFangSC-Medium;
+        font-size: 0.3rem;
+        color: #7ed5bc;
+        letter-spacing: 0;
+        text-align: center;
+        // line-height: 30px;
+      }
+      .number2 {
+        font-family: PingFangSC-Regular;
+        font-size: 0.13rem;
+        // color: #212121;
+        letter-spacing: 0;
+        text-align: center;
+        // line-height: 13px;
+      }
+      .number3 {
+        font-family: PingFangSC-Regular;
+        font-size: 0.13rem;
+        color: #9397ad;
+        letter-spacing: 0;
+        text-align: center;
+        // line-height: 13px;
+      }
+    }
+  }
+}
+/deep/ .mint-navbar {
+  color: #9397ad;
+  font-size: 0.15rem;
+  .mint-tab-item-label {
+    font-size: 0.15rem;
+  }
+  .mint-tab-item.is-selected {
+    // border-bottom: 3px solid #ffffff;
+    border: none;
+    position: relative;
+    color: #333333;
+    &:after {
+      content: "";
+      position: absolute;
+      height: 0.03rem;
+      width: 0.5rem;
+      background-color: #277fff;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      margin-bottom: 0.1rem;
+      border-radius: 1.5px;
+      border-radius: 1.5px;
+    }
+    .mint-tab-item-label {
+      font-size: 0.18rem;
+    }
+  }
+}
+
+.teacher_radar_detial {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.15rem;
+  margin-top: 0.1rem;
+  .title {
+    font-family: PingFangSC-Regular;
+    font-size: 0.13rem;
+    color: #212121;
+    letter-spacing: 0;
+  }
+  .desc {
+    font-family: PingFangSC-Regular;
+    font-size: 0.1rem;
+    color: #9397ad;
+    letter-spacing: 0;
+  }
+  .number {
+    font-family: PingFangSC-Regular;
+    font-size: 0.13rem;
+    color: #2187ff;
+    letter-spacing: 0;
+    margin-left: auto;
+  }
+  .rader_detial_left {
+    margin: 0 auto;
+    margin-left: 0.1rem;
+  }
+  .rader_detial_right {
+    margin: 0 auto;
+    margin-right: 0.1rem;
+  }
+  .rader_detial_left_top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.1rem;
+  }
+  .rader_detial_left_end {
+    display: flex;
+    align-items: center;
+    margin-top: 0.1rem;
+  }
+  .rader_detial_middle {
+    width: 1px;
+    height: 0.4rem;
+    background: #dddddd;
+  }
+}
+.charts {
+  margin-top: 0.1rem;
+  .radechart {
+    .radechart_desc_top {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.1rem;
+      margin-left: 0.1rem;
+      .title {
+        font-family: PingFangSC-Regular;
+        font-size: 0.13rem;
+        color: #212121;
+        letter-spacing: 0;
+        // line-height: 13px;
+      }
+      .number {
+        margin-left: 0.05rem;
+        font-family: PingFangSC-Regular;
+        font-size: 0.2rem;
+        color: #212121;
+        letter-spacing: 0;
+        // line-height: 20px;
+      }
+    }
+    .radechart_desc {
+      position: absolute;
+      margin-left: 0.1rem;
+      width: 1.5rem;
+
+      .radechart_desc_end {
+        .radechart_desc_detial {
+          display: flex;
+          align-items: center;
+          margin-bottom: 0.15rem;
+          .block {
+            width: 0.14rem;
+            height: 0.14rem;
+            background: #333333;
+          }
+          .title {
+            font-size: 0.13rem;
+            margin-left: 0.05rem;
+            font-family: PingFangSC-Regular;
+            color: #212121;
+            letter-spacing: 0;
+            width: 0.4rem;
+            text-align: left;
+          }
+          .newnumber {
+            font-size: 0.13rem;
+            margin-left: 0.05rem;
+            font-family: PingFangSC-Regular;
+            color: #212121;
+            letter-spacing: 0;
+          }
+          .desc {
+            font-family: PingFangSC-Regular;
+            font-size: 0.13rem;
+            color: #9397ad;
+            letter-spacing: 0;
+            text-align: center;
+            // line-height: 10px;
+            margin-left: auto;
+            width: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+.pointchart_desc {
+  display: flex;
+  align-items: center;
+  margin-left: 0.15rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.2rem;
+  .block {
+    width: 0.14rem;
+    height: 0.14rem;
+  }
+  p {
+    font-family: PingFangSC-Regular;
+    font-size: 0.13rem;
+    color: #212121;
+    letter-spacing: 0;
+    // line-height: 13px;
+    margin-left: 0.08rem;
+  }
+}
+.teacher_radar {
+  // margin-top: 0.1rem;
+  width: 3.3rem;
+  height: 3rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.selfchart {
+  width: 2.8rem;
+  height: 1.2rem;
+  margin: 0 auto;
+  border-left: 1px solid #d7dde4;
+  border-bottom: 1px solid #d7dde4;
+  position: relative;
+  .selfchart_main {
+    display: flex;
+    align-items: flex-end;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    margin-left: 0.15rem;
+    p {
+      font-family: PingFangSC-Medium;
+      font-size: 0.1rem;
+      letter-spacing: 0;
+      text-align: center;
+      position: absolute;
+      top: -0.16rem;
+      // line-height: 10px;
+    }
+  }
+  .xray {
+    font-family: PingFangSC-Regular;
+    font-size: 0.13rem;
+    color: #9397ad;
+    letter-spacing: 0;
+    text-align: left;
+    margin-left: 0.1rem;
+  }
+  .yray {
+    font-family: PingFangSC-Regular;
+    font-size: 0.13rem;
+    color: #9397ad;
+    letter-spacing: 0;
+    position: absolute;
+    bottom: 0.05rem;
+    right: 0;
+  }
+  .selfchart_main_single {
+    display: flex;
+    align-items: flex-end;
+    margin-right: 0.27rem;
+    .left {
+      width: 0.14rem;
+      background: #77caf6;
+      position: relative;
+    }
+    .right {
+      width: 0.14rem;
+      background: #326699;
+      position: relative;
+    }
+    .block {
+      margin-top: auto;
+    }
+  }
+}
+.selfchart_end {
+  display: flex;
+  align-items: center;
+  // justify-content: space-around;
+  margin-right: 0.24rem;
+  margin-left: 0.1rem;
+  p {
+    font-family: PingFangSC-Regular;
+    font-size: 0.13rem;
+    color: #9397ad;
+    letter-spacing: 0;
+    margin-right: 0.27rem;
+    // line-height: 13px;
+  }
+}
+.pointchart {
+  .title {
+    font-family: PingFangSC-Regular;
+    font-size: 0.15rem;
+    color: #212121;
+    margin-top: 0.1rem;
+    letter-spacing: 0;
+    // line-height: 15px;
+  }
+}
+.student_train_top {
+  width: 3rem;
+}
+.student_exam_main {
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  .student_exam_main_middle {
+    height: 3.2rem;
+    width: 2.8rem;
+    border-left: 1px solid #d7dde4;
+    border-bottom: 1px solid #d7dde4;
+    margin: 0 auto;
+    position: relative;
+    .xray {
+      font-family: PingFangSC-Regular;
+      font-size: 0.13rem;
+      color: #9397ad;
+      letter-spacing: 0;
+      // line-height: 13px;
+      text-align: left;
+      margin-left: 0.13rem;
+    }
+    .single_main {
+      display: flex;
+      align-items: flex-end;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      .single {
+        width: 0.9rem;
+      }
+      .single:nth-child(1) {
+        // height: 2.42rem;
+        background-image: linear-gradient(
+          180deg,
+          rgba(38, 54, 148, 0.5) 0%,
+          rgba(38, 54, 148, 0) 100%
+        );
+        border-top: 2px solid #263694;
+        position: relative;
+        .single_bottom {
+          font-family: PingFangSC-Regular;
+          font-size: 0.12rem;
+          color: #263694;
+          letter-spacing: 0;
+          // line-height: 16px;
+          text-align: left;
+          position: absolute;
+          bottom: 0.1rem;
+          left: 0.07rem;
+        }
+        .single_percen {
+          font-family: PingFangSC-Regular;
+          font-size: 0.12rem;
+          color: #263694;
+          letter-spacing: 0;
+          text-align: center;
+          // line-height: 16px;
+          position: absolute;
+          top: -0.2rem;
+          // left: 30%;
+          width: 0.9rem;
+          text-align: center;
+        }
+      }
+      .single:nth-child(2) {
+        // height: 2.66rem;
+        background-image: linear-gradient(
+          180deg,
+          rgba(35, 158, 255, 0.5) 0%,
+          rgba(35, 158, 255, 0) 100%
+        );
+        border-top: 2px solid #239eff;
+        position: relative;
+        .single_bottom {
+          font-family: PingFangSC-Regular;
+          font-size: 0.12rem;
+          color: #239eff;
+          letter-spacing: 0;
+          // line-height: 16px;
+          text-align: left;
+          position: absolute;
+          bottom: 0.1rem;
+          left: 0.07rem;
+        }
+        .single_percen {
+          font-family: PingFangSC-Regular;
+          font-size: 0.12rem;
+          color: #239eff;
+          letter-spacing: 0;
+          text-align: center;
+          // line-height: 16px;
+          position: absolute;
+          top: -0.2rem;
+          // left: 30%;
+          width: 0.9rem;
+          text-align: center;
+        }
+      }
+      .single:nth-child(3) {
+        // height: 2.51rem;
+        background-image: linear-gradient(
+          180deg,
+          rgba(245, 124, 0, 0.5) 0%,
+          rgba(245, 124, 0, 0) 100%
+        );
+        border-top: 2px solid #f57c00;
+        position: relative;
+        .single_bottom {
+          font-family: PingFangSC-Regular;
+          font-size: 0.12rem;
+          color: #f57c00;
+          letter-spacing: 0;
+          // line-height: 16px;
+          text-align: left;
+          position: absolute;
+          bottom: 0.1rem;
+          left: 0.07rem;
+        }
+        .single_percen {
+          font-family: PingFangSC-Regular;
+          font-size: 0.12rem;
+          color: #f57c00;
+          letter-spacing: 0;
+          text-align: center;
+          // line-height: 16px;
+          position: absolute;
+          top: -0.2rem;
+          // left: 30%;
+          width: 0.9rem;
+          text-align: center;
+        }
+      }
+    }
+  }
+  .student_exam_main_end {
+    display: flex;
+    align-items: flex-start;
+    margin-left: 0.1rem;
+    margin-top: 0.1rem;
+    p {
+      font-family: PingFangSC-Regular;
+      font-size: 0.13rem;
+      color: #9397ad;
+      letter-spacing: 0;
+      // line-height: 13px;
+      width: 0.9rem;
+    }
+  }
+}
+.logout {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  .logout_box {
+    width: 3rem;
+    height: 1.95rem;
+    background: #ffffff;
+    border-radius: 10px;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    .logout_box_top {
+      border-bottom: 1px solid #f0f0f7;
+      position: relative;
+      margin-left: 0.15rem;
+      margin-right: 0.15rem;
+      p {
+        font-family: PingFangSC-Regular;
+        font-size: 0.16rem;
+        color: #212121;
+        letter-spacing: 0;
+        text-align: center;
+        padding-top: 0.1rem;
+        padding-bottom: 0.1rem;
+        // line-height: 16px;
+      }
+      img {
+        position: absolute;
+        top: 0.15rem;
+        right: 0.1rem;
+        width: 0.12rem;
+        height: 0.12rem;
+      }
+    }
+    .logout_box_middle {
+      .title {
+        font-family: PingFangSC-Regular;
+        font-size: 0.16rem;
+        color: #212121;
+        letter-spacing: 0;
+        text-align: center;
+        margin-top: 0.29rem;
+        margin-bottom: 0.3rem;
+        // line-height: 16px;
+      }
+      .logout_box_end {
+        display: flex;
+        align-items: center;
+        // margin-left: 0.15rem;
+        // margin-right: 0.15rem;
+        // justify-content: space-around;
+        // padding-bottom: 0.3rem;
+        width: 2.6rem;
+        margin: 0 auto;
+        .logout_box_end_left {
+          width: 1.2rem;
+          height: 0.4rem;
+          background: #ffffff;
+          border: 1px solid #277fff;
+          border-radius: 20px;
+          border-radius: 20px;
+          margin-right: 0.1rem;
+          p {
+            font-family: PingFangSC-Regular;
+            font-size: 0.15rem;
+            color: #277fff;
+            letter-spacing: 0;
+            text-align: center;
+            line-height: 0.4rem;
+            // line-height: 15px;
+          }
+        }
+        .logout_box_end_right {
+          width: 1.2rem;
+          height: 0.4rem;
+          background: #277fff;
+          // border: 1px solid #277FFF;
+          border-radius: 20px;
+          border-radius: 20px;
+          margin-left: 0.1rem;
+          p {
+            font-family: PingFangSC-Regular;
+            font-size: 0.15rem;
+            color: #ffffff;
+            letter-spacing: 0;
+            text-align: center;
+            line-height: 0.4rem;
+            // line-height: 15px;
+          }
+        }
+      }
+    }
+  }
+}
+.student_top_box {
+  /deep/.swiper-slide {
+    font-family: PingFangSC-Regular;
+    font-size: 0.14rem;
+    color: #9397ad;
+    letter-spacing: 0;
+    text-align: center;
+    // line-height: 14px;
+  }
+  /deep/ .swiper-slide-active {
+    font-family: PingFangSC-Regular;
+    font-size: 0.16rem;
+    color: #474c63;
+    letter-spacing: 0;
+    text-align: center;
+    border-bottom: 3px solid #277fff;
+    height: 0.35rem;
+    // line-height: 16px;
+  }
+  .nav_single {
+    p {
+      font-family: PingFangSC-Regular;
+      font-size: 0.13rem;
+      color: #9397ad;
+      letter-spacing: 0;
+      text-align: center;
+      // line-height: 14px;
+    }
+  }
+  .active {
+    width: 0.7rem;
+    height: 0.3rem;
+    border-bottom: 3px solid #277fff;
+    p {
+      font-family: PingFangSC-Regular;
+      font-size: 0.16rem;
+      color: #474c63;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 0.3rem;
+    }
+  }
+}
+.selectcomp {
+  width: 0.5rem;
+  height: 0.2rem;
+  background: #f0f0f7;
+  position: absolute;
+  z-index: 1;
+  left: 0.2rem;
+  .selectcomptitle {
+    font-size: 0.1rem;
+    text-align: center;
+    line-height: 0.2rem;
+  }
+  .selectsingle {
+    background: #f0f0f7;
+    .singletitle {
+      font-size: 0.1rem;
+    }
+  }
+}
+.selectcomp1 {
+  width: 0.5rem;
+  height: 0.2rem;
+  background: #f0f0f7;
+  position: absolute;
+  z-index: 1;
+  left: 1rem;
+  .selectcomptitle {
+    font-size: 0.1rem !important;
+    text-align: center !important;
+    line-height: 0.2rem;
+    margin: 0 !important;
+  }
+  .selectsingle {
+    background: #f0f0f7;
+    .singletitle {
+      font-size: 0.1rem !important;
+      margin: 0 !important;
+      text-align: center !important;
+    }
+  }
+}
+</style>

@@ -1,0 +1,65 @@
+{
+  "name": "zj2y_app",
+  "version": "1.0.0",
+  "author": "Lison<lison.modern@gmail.com>",
+  "private": false,
+  "scripts": {
+    "dev": "vue-cli-service serve --open",
+    "build": "rm -rf public/dist && vue-cli-service build --mode prod",
+    "lint": "vue-cli-service lint",
+    "test": "rm -rf public/dist && vue-cli-service build --mode test",
+    "server": "cd public && pm2 start --name=zj2y_app prod.js",
+    "start": "cd public && pm2 start --name=zj2y_app_test test.js"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "babel": "^6.23.0",
+    "echarts": "^4.3.0",
+    "js-cookie": "^2.2.0",
+    "koa": "^2.7.0",
+    "koa-static": "^5.0.0",
+    "mint-ui": "^2.2.13",
+    "moment": "^2.24.0",
+    "postcss-px-to-viewport": "^1.1.1",
+    "vant": "^2.8.7",
+    "vue": "^2.6.6",
+    "vue-awesome-swiper": "^3.1.3",
+    "vue-circleprogressbar": "^2.0.0",
+    "vue-router": "^3.0.2",
+    "vuex": "^3.1.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.0-rc.10",
+    "@vue/cli-plugin-eslint": "^3.0.0-rc.10",
+    "@vue/cli-plugin-unit-mocha": "^3.0.0-rc.10",
+    "@vue/cli-service": "^3.0.0-rc.10",
+    "@vue/eslint-config-standard": "^3.0.0-rc.10",
+    "@vue/test-utils": "^1.0.0-beta.23",
+    "babel-plugin-dynamic-import-webpack": "^1.1.0",
+    "chai": "^4.1.2",
+    "compression-webpack-plugin": "^2.0.0",
+    "eslint-plugin-cypress": "^2.0.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "lint-staged": "^6.0.0",
+    "mockjs": "^1.0.1-beta3",
+    "uglifyjs-webpack-plugin": "^2.1.1",
+    "vue-template-compiler": "^2.6.6"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 7 versions",
+    "not ie <= 8"
+  ],
+  "gitHooks": {},
+  "lint-staged": {
+    "src/**/*.js": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "src/**/*.vue": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  }
+}
