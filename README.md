@@ -1,14 +1,12 @@
-# xgkj后台模板工程
 
 #### 项目介绍
-zj2y_app系统基础模板
+zj2y_app系统基础
 技术栈：VUE-cli3.0+Mint+mock.js
 
 #### 安装教程
 
 1. 克隆到本地
     ```
-    git clone https://gitee.com/xuegekeji/zj2y_app.git
     ```
 2. 安装依赖
     ```
