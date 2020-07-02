@@ -42,9 +42,9 @@
     <div style class="main">
       <!-- 页面顶部 -->
       <div>
-        <div class="dropdown">
+        <!-- <div class="dropdown">
           <p>下拉刷新...</p>
-        </div>
+        </div>-->
         <!-- 页面顶部内容 -->
         <div class="main_today">
           <div class="main_today_top2">
@@ -114,7 +114,7 @@
               >
                 <!-- 师资评价-->
                 <swiper-slide>
-                  <div style="height:100%" class="boxshadow">
+                  <div class="boxshadow">
                     <div class="box2_top">
                       <div class="title">
                         <p style="margin-right:0.1rem;">师资评价</p>
@@ -138,7 +138,6 @@
                       <radar
                         v-if="flag1"
                         ref="radar1"
-                        style="margin-top:0.3rem;height:2.1rem"
                         :maintitle="'对老师评价雷达图'"
                         :barnumber="radardata1"
                       ></radar>
@@ -152,7 +151,7 @@
                             <p class="title">评价平均分</p>
                             <!-- <p class="desc">(满分{{teacherValuate.zdmf}})</p> -->
                           </div>
-                          <div class="blockbg">
+                          <div class="blockbg2">
                             <p class="number">{{teacherValuate.zs}}</p>
                             <p class="title">评价发送次数</p>
                           </div>
@@ -162,7 +161,7 @@
                             <p class="number">{{teacherValuate.zdf}}</p>
                             <p class="title">评价最低分</p>
                           </div>
-                          <div class="blockbg">
+                          <div class="blockbg2">
                             <p class="number">{{teacherValuate.tjl}}</p>
                             <p class="title">评价表提交率</p>
                           </div>
@@ -173,7 +172,7 @@
                 </swiper-slide>
                 <!-- 师资介绍-->
                 <swiper-slide>
-                  <div @click="hadleStudentExamine" class="student_exam boxshadow">
+                  <div @click="hadleTeacherIntroduce" class="student_exam boxshadow">
                     <div class="student_train_top box2_top">
                       <p style="margin-right:0.1rem" class="title">师资介绍</p>
                       <p class="more">更多</p>
@@ -184,30 +183,30 @@
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
                     <!-- 师资介绍内容 -->
-                    <div style="margin-top:0.25rem">
-                      <div class="teachernum">
+                    <div style="margin-top:0.25rem" v-if="showteacherString">
+                      <div class="teacherrs">
                         <p class="title">老师总数量（人）</p>
-                        <p class="number">1159</p>
+                        <p class="number">{{teacherDatalist.lssl}}</p>
                       </div>
-                      <div class="teacherlist">
+                      <div class="teacherlistplan">
                         <ul>
                           <li>
-                            <p class="number">217</p>
-                            <p class="title">主治医师</p>
+                            <p class="number">{{teacherDatalist.zrys}}</p>
+                            <p class="title">主任医师</p>
                           </li>
                           <li>
-                            <p class="number">217</p>
-                            <p class="title">主治医师</p>
+                            <p class="number">{{teacherDatalist.fzrys}}</p>
+                            <p class="title">副主任医师</p>
                           </li>
                         </ul>
                         <ul>
                           <li style="border-radius: 0rem 0rem 0rem 0.1rem;">
-                            <p class="number">217</p>
+                            <p class="number">{{teacherDatalist.zzys}}</p>
                             <p class="title">主治医师</p>
                           </li>
                           <li style="border-radius: 0rem 0rem 0.1rem 0rem;">
-                            <p class="number">217</p>
-                            <p class="title">主治医师</p>
+                            <p class="number">0</p>
+                            <p class="title">其他</p>
                           </li>
                         </ul>
                       </div>
@@ -216,7 +215,7 @@
                 </swiper-slide>
                 <!-- 师资培训 -->
                 <swiper-slide>
-                  <div @click="hadleStudentExamine" class="student_exam boxshadow">
+                  <div @click="hadleTeacherTrain" class="student_exam boxshadow">
                     <div class="student_train_top box2_top">
                       <p style="margin-right:0.1rem" class="title">师资培训</p>
                       <p class="more">更多</p>
@@ -227,18 +226,18 @@
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
                     <!-- 师资培训内容 -->
-                    <div style="margin-top:0.25rem">
+                    <div style="margin-top:0.25rem" v-if="showteacherString">
                       <div class="teachernum">
                         <p class="title">本年度培训计划</p>
                       </div>
-                      <div class="teacherlist">
+                      <div class="teacherlistplan">
                         <ul>
                           <li>
-                            <p class="number">20</p>
+                            <p class="number">{{teacherStringData.ndjhs}}</p>
                             <p class="title">申报计划</p>
                           </li>
                           <li>
-                            <p class="number">15</p>
+                            <p class="number" style="color:#0096C1">{{teacherStringData.zxjhs}}</p>
                             <p class="title">已完成计划</p>
                           </li>
                         </ul>
@@ -246,14 +245,14 @@
                       <div class="teachernum">
                         <p class="title">本年度培训人次</p>
                       </div>
-                      <div class="teacherlist">
+                      <div class="teacherlistplan">
                         <ul>
                           <li>
-                            <p class="number">217</p>
+                            <p class="number">{{teacherStringData.jhpxrs}}</p>
                             <p class="title">计划培训人次</p>
                           </li>
                           <li>
-                            <p class="number">217</p>
+                            <p class="number" style="color:#0096C1">{{teacherStringData.sjpxrs}}</p>
                             <p class="title">目前培训人次</p>
                           </li>
                         </ul>
@@ -263,47 +262,36 @@
                 </swiper-slide>
                 <!-- 师资绩效-->
                 <swiper-slide>
-                  <div @click="hadleStudentExamine" class="student_exam boxshadow">
+                  <div @click="handleTeachingStudent" class="student_exam boxshadow">
                     <div class="student_train_top box2_top">
                       <p style="margin-right:0.1rem" class="title">师资绩效</p>
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <p class="descs">数据截止时间：2020年/06月</p>
+                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
-                    <!-- 师资介绍内容 -->
+                    <!-- 师资绩效内容 -->
                     <div style="margin-top:0.25rem">
-                      <div class="teachernum">
+                      <div class="teachernumjx">
                         <p class="title">带教学员数量</p>
-                        <p class="number">266</p>
+                        <p class="number">{{teacherWorkData.djxysl}}</p>
                       </div>
                       <div class="teachernum2">
                         <p class="title">带教学员数量</p>
-                        <p class="number">266</p>
+                        <p class="number">{{teacherWorkData.djhds}}</p>
                         <span class="bfb">教学活动好评度</span>
-                        <span class="bfbnum">85.76%</span>
+                        <span class="bfbnum">
+                          {{(teacherWorkData.djhdhpl2*100).toFixed(2)}}
+                          <span>%</span>
+                        </span>
                       </div>
                       <div class="teacherlist">
                         <ul>
-                          <li>
-                            <p class="number">217</p>
-                            <p class="title">主治医师</p>
-                          </li>
-                          <li>
-                            <p class="number">217</p>
-                            <p class="title">主治医师</p>
-                          </li>
-                        </ul>
-                        <ul>
-                          <li style="border-radius: 0rem 0rem 0rem 0.1rem;">
-                            <p class="number">217</p>
-                            <p class="title">主治医师</p>
-                          </li>
-                          <li style="border-radius: 0rem 0rem 0.1rem 0rem;">
-                            <p class="number">217</p>
-                            <p class="title">主治医师</p>
+                          <li v-for="(item,index) in teachertraintypeworkload" :key="index">
+                            <p class="number">{{item.typesum }}</p>
+                            <p class="title">{{item.traintypename }}</p>
                           </li>
                         </ul>
                       </div>
@@ -361,55 +349,72 @@
                     class="student_train boxshadow"
                   >
                     <div class="student_train_top box2_top">
-                      <p class="title">20/{{moment}}月学员培训概况</p>
+                      <p style="margin-right:0.1rem" class="title">学员培训概况</p>
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <div style="width: 3rem;display:none">
+                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+                    <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
-                    <div v-if="showstudentexame" class="student_train_main">
-                      <div class="student_train_single">
-                        <div class="student_single_left">
-                          <p style="color: #F9953F;" class="number">{{studenttrain.trainsum.zcc}}</p>
-                          <p class="desc">{{moment}}月共计培训场次</p>
-                        </div>
-                        <div class="student_single_right">
-                          <p>一年级 {{studenttrain.trainsum.ynjcc}}</p>
-                          <p>二年级 {{studenttrain.trainsum.enjcc}}</p>
-                          <p style="margin:0">三年级 {{studenttrain.trainsum.snjcc}}</p>
+                    <!-- on banner -->
+                    <div class="bannerbox2" v-if="showstudentexame">
+                      <div class="bannerleft">
+                        <p>人均（次）</p>
+                        <div class="bannertext">
+                          <p class="number">{{studenttrain.trainrjcs.rjpxcs}}</p>
+                          <p class="title">{{moment}}月人均培训次数</p>
                         </div>
                       </div>
-                      <div class="student_train_single middle">
-                        <div class="student_single_left">
-                          <p
-                            style="color: #7ED5BC;"
-                            class="number"
-                          >{{studenttrain.trainrjcs.rjpxcs}}</p>
-                          <p class="desc">{{moment}}月人均培训次数</p>
-                          <p class="desc">（总人数{{studenttrain.trainrjcs.zrs}}人）</p>
-                        </div>
-                        <div class="student_single_right">
-                          <p>一年级 {{studenttrain.trainrjcs.ynjrjcs}}</p>
-                          <p>二年级 {{studenttrain.trainrjcs.enjrjcs}}</p>
-                          <p style="margin:0">三年级 {{studenttrain.trainrjcs.snjrjcs}}</p>
+                      <div class="bannerright">
+                        <ul>
+                          <li>
+                            总人数
+                            <span>{{studenttrain.trainrjcs.zrs}}</span>
+                          </li>
+                          <li>
+                            一年级
+                            <span>{{studenttrain.trainrjcs.ynjrjcs}}</span>
+                          </li>
+                          <li>
+                            二年级
+                            <span>{{studenttrain.trainrjcs.enjrjcs}}</span>
+                          </li>
+                          <li>
+                            三年级
+                            <span>{{studenttrain.trainrjcs.snjrjcs}}</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <!-- down banner -->
+                    <div class="bannerbox2" v-if="showstudentexame">
+                      <div class="bannerleft">
+                        <p>累计人次（次）</p>
+                        <div class="bannertext">
+                          <p class="number">{{studenttrain.trainljrc.ljrc}}</p>
+                          <p class="title">{{moment}}月培训累计人次</p>
                         </div>
                       </div>
-                      <div class="student_train_single">
-                        <div class="student_single_left">
-                          <div class="flex_end">
-                            <p
-                              style="color: #326699;"
-                              class="number"
-                            >{{studenttrain.trainljrc.ljrc}}</p>
-                          </div>
-                          <p class="desc">{{moment}}月培训累计人次</p>
-                        </div>
-                        <div class="student_single_right">
-                          <p>一年级 {{studenttrain.trainljrc.ynjrc}}</p>
-                          <p>二年级 {{studenttrain.trainljrc.enjrc}}</p>
-                          <p style="margin:0">三年级 {{studenttrain.trainljrc.snjrc}}</p>
-                        </div>
+                      <div class="bannerright">
+                        <ul>
+                          <li>
+                            总人数
+                            <span>{{studenttrain.trainrjcs.zrs}}</span>
+                          </li>
+                          <li>
+                            一年级
+                            <span>{{studenttrain.trainljrc.ynjrc}}</span>
+                          </li>
+                          <li>
+                            二年级
+                            <span>{{studenttrain.trainljrc.enjrc}}</span>
+                          </li>
+                          <li>
+                            三年级
+                            <span>{{studenttrain.trainljrc.snjrc}}</span>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -419,43 +424,30 @@
                   <div @click="hadleStudentExamine" class="student_exam boxshadow">
                     <div class="student_train_top box2_top">
                       <p style="margin-right:0.1rem" class="title">住培考核状况</p>
-
-                      <div class="selectcomp">
-                        <p
-                          @click.stop="handleSelectcomp1()"
-                          class="selectcomptitle"
-                        >上{{selectname1}}</p>
-                        <div v-show="selectcomp1" class="selectsingle">
-                          <p @click.stop="changeValues('月度')" class="singletitle">理论</p>
-                          <p @click.stop="changeValues('季度')" class="singletitle">技能</p>
-                        </div>
-                      </div>
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
+                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
-
-                    <div v-for="(item,index) in studentexame" :key="index" class="tabletop">
-                      <p class="topname">{{item.examtype}}</p>
-                      <div class="top">
-                        <div class="end">
-                          <div class="end_end">
-                            <div class="end_th">
-                              <p>发布场次</p>
-                              <p>参与人次</p>
-                              <p>得分率</p>
-                            </div>
-                            <div class="endtable">
-                              <div class="end_td">
-                                <p>{{item.kscc}}</p>
-                                <p>{{item.cysc}}</p>
-                                <p>{{item.dfl}}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                    <div class="khbanner" v-for="(item,index) in studentexame" :key="index">
+                      <p class="listtype">{{item.examtype}}考试</p>
+                      <div class="khbox">
+                        <ul>
+                          <li>
+                            <p class="title">发布场次</p>
+                            <p class="number">{{item.kscc}}</p>
+                          </li>
+                          <li>
+                            <p class="title">参与人次</p>
+                            <p class="number">{{item.cysc}}</p>
+                          </li>
+                          <li>
+                            <p class="title">得分率</p>
+                            <p class="number">{{item.dfl}}%</p>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -518,11 +510,11 @@
                               class="selfchart_main_single"
                             >
                               <div class="left">
-                                <p style="color:#77CAF6">{{item.zszs}}</p>
+                                <p style="color:#00C290">{{item.zszs}}</p>
                                 <div :style="{ 'height': item.zszs*0.001 + 'rem' }" class="block"></div>
                               </div>
                               <div class="right">
-                                <p style="color:#326699">{{item.jqzyzss}}</p>
+                                <p style="color:#FF9B00">{{item.jqzyzss}}</p>
                                 <div
                                   :style="{ 'height': item.jqzyzss*0.001 + 'rem' }"
                                   class="block"
@@ -537,9 +529,9 @@
                         </div>
 
                         <div class="pointchart_desc">
-                          <div style="background: #77CAF6;" class="block"></div>
+                          <div style="background: #00C290;" class="block"></div>
                           <p style="margin-right:auto">总招收人数</p>
-                          <div style="background: #326699;" class="block"></div>
+                          <div style="background: #FF9B00;" class="block"></div>
                           <p style="margin-right:0.15rem">紧缺专业招收人数</p>
                         </div>
                       </div>
@@ -551,18 +543,19 @@
                 <swiper-slide>
                   <div @click="hadleStudentScore" class="student_score boxshadow">
                     <div class="student_train_top box2_top">
-                      <p class="title">学员评价概况</p>
+                      <p style="margin-right:0.1rem" class="title">学员评价概况</p>
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <div style="width: 3rem;display:none">
+                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+                    <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
                     <div class="student_score_main">
                       <radar
                         v-if="flag2"
                         ref="radar2"
-                        :maintitle="'360评价图'"
+                        :maintitle="'对学员评价雷达图'"
                         :barnumber="radardata2"
                       ></radar>
                       <div v-else style="width:100%;height:2rem;">
@@ -571,7 +564,7 @@
                       <div class="student_score_main_desc">
                         <div class="score_main_single">
                           <p class="title">评价平均分</p>
-                          <p class="ddes">（满分{{studentvalue.evaluateoverview.zdmf}}）</p>
+                          <p class="title">（满分{{studentvalue.evaluateoverview.zdmf}}）</p>
                           <p class="answer">{{studentvalue.evaluateoverview.pjpjf}}</p>
                         </div>
                         <div class="score_main_single">
@@ -593,42 +586,45 @@
                 <!-- 轮转-->
                 <swiper-slide>
                   <div @click="handleRotation" class="teacher_train boxshadow">
-                    <div class="student_rotation_top box2_top">
-                      <p class="title">科室人数</p>
+                    <div class="student_train_top box2_top">
+                      <p style="margin-right:0.1rem" class="title">科室人数</p>
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <div style="width: 3rem;display:none">
+                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+                    <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
                     <div v-if="showbar" class="student_rotation_main">
                       <div class="rotation_desc">
                         <p class="title">当前轮转人员分布</p>
-                        <p class="desc">数据截止时间:当前</p>
-
-                        <div class="teacher_train_main">
-                          <div class="train_main_top flex">
-                            <div class="train_main_top_left single">
-                              <p class="number">{{studentround.dqlzrs}}</p>
-                              <p class="number2">当前轮转人数</p>
-                              <p class="number3">季度</p>
+                        <div class="lzbanner">
+                          <div class="lztop">
+                            <p class="title">上季度</p>
+                            <div class="lzbox">
+                              <div class="lzleft">
+                                <p class="number">{{studentround.dqlzrs}}</p>
+                                <p class="title">轮转人数</p>
+                              </div>
+                              <div class="lzright">
+                                <p class="number">{{studentround.waplzxys}}</p>
+                                <p class="title">未排轮转人数</p>
+                              </div>
                             </div>
-                            <div class="train_main_top_right single">
-                              <p style="color: #5E7AB8;" class="number">{{studentround.waplzxys}}</p>
-                              <p class="number2">未排轮转人数</p>
-                              <p class="number3">季度</p>
+                            <div class="lzbox">
+                              <div class="lzleft">
+                                <p class="number" style="color:#FF9B00">{{studentround.wajhlz}}</p>
+                                <p class="title">未按计划轮转</p>
+                              </div>
                             </div>
                           </div>
-                          <div class="train_main_end flex">
-                            <div class="train_main_end_left single">
-                              <p style="color: #5E7AB8;" class="number">{{studentround.wajhlz}}</p>
-                              <p class="number2">未按计划轮转</p>
-                              <p class="number3">季度</p>
-                            </div>
-                            <div class="train_main_end_right single">
-                              <p style="color: #326699;" class="number">{{studentround.tprs}}</p>
-                              <p class="number2">退培人数</p>
-                              <p class="number3">年度</p>
+                          <div class="lzbottom">
+                            <p class="title">上年度</p>
+                            <div class="lzbox2">
+                              <div class="lzleft">
+                                <p class="number">{{studentround.tprs}}</p>
+                                <p class="title">退培人数</p>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1657,23 +1653,23 @@ export default {
             });
           }
           this.radardata2 = arrspd;
-          // if (
-          //   arrspd[0].value == 0 &&
-          //   arrspd[1].value == 0 &&
-          //   arrspd[2].value == 0 &&
-          //   arrspd[3].value == 0 &&
-          //   arrspd[4].value == 0 &&
-          //   arrspd[5].value == 0
-          // ) {
-          //   this.flag2 = false;
-          // } else {
-          //   this.flag2 = true;
-          // }
-          // this.flag2 = true
-          // setTimeout(() => {
-          //   this.$refs.radar2.drawLine()
-          //   // this.$refs.radar2.drawLine()
-          // }, 1000);
+          if (
+            arrspd[0].value == 0 &&
+            arrspd[1].value == 0 &&
+            arrspd[2].value == 0 &&
+            arrspd[3].value == 0 &&
+            arrspd[4].value == 0 &&
+            arrspd[5].value == 0
+          ) {
+            this.flag2 = false;
+          } else {
+            this.flag2 = true;
+          }
+          this.flag2 = true;
+          setTimeout(() => {
+            this.$refs.radar2.drawLine();
+            // this.$refs.radar2.drawLine()
+          }, 1000);
         } else {
           console.log("暂无数据");
         }
@@ -1966,7 +1962,7 @@ export default {
 .main {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  // overflow: hidden;
   position: absolute;
   z-index: 2;
   top: 0.6rem;
@@ -2285,14 +2281,9 @@ export default {
     }
     .boxshadow {
       width: 3.3rem;
-      // height: 3.16rem;
-      // height: 5rem;
       background: #ffffff;
       box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
       border-radius: 5px;
-      border-radius: 5px;
-      // margin: 0 auto;
-      // margin-top: 0.05rem;
       margin-bottom: 0.1rem;
       margin-top: 0.1rem;
       // overflow: hidden;
@@ -2300,7 +2291,7 @@ export default {
   }
 }
 .student {
-  padding-top: 0.1rem;
+  // padding-top: 0.1rem;
   height: 100%;
   .student_header {
     display: flex;
@@ -2331,7 +2322,7 @@ export default {
     }
   }
   .student_main {
-    height: 84%;
+    height: 95%;
     /deep/ .swiper-container {
       width: 100%;
       height: 100%;
@@ -2351,8 +2342,8 @@ export default {
       -webkit-align-items: center;
       align-items: center;
       transition: 300ms;
-      transform: scale(0.8);
-      // width: 3.5rem !important;
+      transform: scale(0.75);
+      height: 100%;
     }
     /deep/ .swiper-slide-active,
     .swiper-slide-duplicate-active {
@@ -2383,14 +2374,10 @@ export default {
 
     .student_main_box {
       width: 3.8rem;
-      // height: 4.06rem;
-      // background: #dddddd;
-      // box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
-      border-radius: 5px;
       border-radius: 5px;
       margin: 0 auto;
-      // margin-top: 0.05rem;
       overflow: hidden;
+      margin-top: 0.1rem;
       .box1_top {
         display: flex;
         align-items: center;
@@ -2424,14 +2411,11 @@ export default {
         position: relative;
         width: 3rem;
         height: 100%;
-        // height: 3.51rem;
         background: #ffffff;
         box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.08);
         border-radius: 5px;
         border-radius: 5px;
         margin: 0 auto;
-        margin-top: 0.05rem;
-        margin-bottom: 0.1rem;
       }
     }
   }
@@ -3142,6 +3126,8 @@ export default {
 }
 .student_score_main {
   margin-top: 0.2rem;
+  width: 90%;
+  margin: auto;
   img {
     width: 2.8rem;
     height: 3.41rem;
@@ -3154,21 +3140,23 @@ export default {
     .score_main_single {
       display: flex;
       align-items: center;
-      margin-left: 0.15rem;
-      margin-right: 0.15rem;
-      margin-bottom: 0.1rem;
-      .ddes {
-        color: #9397ad;
-        font-size: 0.1rem;
-      }
-      .answer {
-        color: #239eff;
-      }
-      p {
-        font-size: 0.13rem;
+      padding: 0px 10px;
+      height: 0.4rem;
+      background: rgba(247, 247, 247, 1);
+      border-radius: 0.06rem;
+      margin-top: 5px;
+      .title {
+        font-size: 0.11rem;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 500;
+        color: rgba(89, 89, 89, 1);
       }
       .answer {
         margin-left: auto;
+        font-size: 0.16rem;
+        font-family: DINAlternate-Bold, DINAlternate;
+        font-weight: bold;
+        color: rgba(0, 150, 193, 1);
       }
     }
   }
@@ -3203,11 +3191,10 @@ export default {
     margin-bottom: 0.3rem;
     margin-top: 0.18rem;
     .title {
-      font-family: PingFangSC-Regular;
-      font-size: 0.15rem;
-      color: #212121;
-      letter-spacing: 0;
-      // line-height: 15px;
+      font-size: 0.12rem;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 1);
     }
     .desc {
       font-size: 0.1rem;
@@ -3252,54 +3239,6 @@ export default {
   }
 }
 
-.teacher_radar_detial {
-  // display: flex;
-  align-items: center;
-  margin-bottom: 0.15rem;
-  margin-top: 0.1rem;
-  .title {
-    font-family: PingFangSC-Regular;
-    font-size: 0.13rem;
-    color: #212121;
-    letter-spacing: 0;
-  }
-  .desc {
-    font-family: PingFangSC-Regular;
-    font-size: 0.1rem;
-    color: #9397ad;
-    letter-spacing: 0;
-  }
-  .number {
-    font-family: PingFangSC-Regular;
-    font-size: 0.13rem;
-    color: #2187ff;
-    letter-spacing: 0;
-    margin-left: auto;
-  }
-  .rader_detial_left {
-    margin: 0 auto;
-    margin-left: 0.1rem;
-  }
-  .rader_detial_right {
-    margin: 0 auto;
-    margin-right: 0.1rem;
-  }
-  .rader_detial_left_top {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.1rem;
-  }
-  .rader_detial_left_end {
-    display: flex;
-    align-items: center;
-    margin-top: 0.1rem;
-  }
-  .rader_detial_middle {
-    width: 1px;
-    height: 0.4rem;
-    background: #dddddd;
-  }
-}
 .charts {
   margin-top: 0.1rem;
   .radechart {
@@ -3389,12 +3328,9 @@ export default {
     margin-left: 0.08rem;
   }
 }
-.teacher_radar {
-  height: 70%;
-  position: absolute;
-  bottom: 0;
-  margin: auto;
-}
+// .teacher_radar {
+
+// }
 .selfchart {
   width: 2.8rem;
   height: 1.2rem;
@@ -3743,6 +3679,7 @@ export default {
     color: #9397ad;
     letter-spacing: 0;
     text-align: center;
+    height: 100%;
     // line-height: 14px;
   }
   /deep/ .swiper-slide-active {
@@ -3756,7 +3693,7 @@ export default {
     .swiperborder {
       height: 3px;
       background: #0096c1;
-      width: 20px;
+      width: 40px;
       position: absolute;
       bottom: 0;
     }
@@ -3830,15 +3767,17 @@ export default {
 }
 .nexttop {
   margin-top: 10px;
+  background: #fff;
 }
 .banner-box {
-  height: 100%;
+  height: 90%;
   background: #f2f2f3;
 }
 
 .mint-navbar {
   width: 2.25rem;
   // margin: 0 auto;
+  padding: 0px;
   background: #fff;
   border-top-left-radius: 0.05rem;
   border-top-right-radius: 0.05rem;
@@ -3851,7 +3790,7 @@ export default {
   }
 }
 .blockbg {
-  height: 0.6rem;
+  height: 0.5rem;
   width: 1.1rem;
   background: #f7f7f7;
   border-radius: 0.06rem;
@@ -3859,6 +3798,37 @@ export default {
   line-height: 0.2rem;
   margin-right: 0.2rem;
   display: inline-block;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(89, 89, 89, 1);
+  font-size: 11px;
+  margin-top: 0.1rem;
+  .number {
+    font-size: 20px;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(0, 150, 193, 1);
+  }
+}
+.blockbg2 {
+  height: 0.5rem;
+  width: 1.1rem;
+  background: #f7f7f7;
+  border-radius: 0.06rem;
+  padding-top: 0.15rem;
+  line-height: 0.2rem;
+  font-size: 11px;
+  display: inline-block;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(89, 89, 89, 1);
+  margin-top: 0.1rem;
+  .number {
+    font-size: 20px;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(0, 150, 193, 1);
+  }
 }
 .mint-tabbar {
   top: 0.4rem;
@@ -3873,13 +3843,58 @@ export default {
   margin: 0 auto;
   text-align: left;
   .title {
-    font-size: 0.11rem;
-    line-height: 0.3rem;
+    font-size: 0.15rem;
+    line-height: 0.7rem;
     color: rgba(89, 89, 89, 1);
+    font-weight: 500;
   }
   .number {
     color: #0096c1;
     font-size: 0.2rem;
+  }
+}
+.teacherrs {
+  height: 0.6rem;
+  width: 2.38rem;
+  background: rgba(247, 247, 247, 1);
+  border-radius: 0.1rem 0.1rem 0rem 0rem;
+  padding-left: 0.22rem;
+  margin: 0 auto;
+  text-align: left;
+  .title {
+    padding-top: 0.1rem;
+    font-size: 11px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(89, 89, 89, 1);
+  }
+  .number {
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(0, 150, 193, 1);
+    font-size: 20px;
+  }
+}
+.teachernumjx {
+  height: 0.6rem;
+  width: 2.38rem;
+  background: rgba(247, 247, 247, 1);
+  border-radius: 0.1rem 0.1rem 0rem 0rem;
+  padding-left: 0.22rem;
+  margin: 0 auto;
+  text-align: left;
+  .title {
+    line-height: 0.3rem;
+    font-size: 11px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(89, 89, 89, 1);
+  }
+  .number {
+    font-size: 20px;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(0, 150, 193, 1);
   }
 }
 .teachernum2 {
@@ -3895,28 +3910,12 @@ export default {
     color: rgba(89, 89, 89, 1);
   }
   .number {
-    color: #0096c1;
-    font-size: 0.2rem;
+    font-size: 20px;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(0, 150, 193, 1);
   }
 
-  .teachernum {
-    height: 0.6rem;
-    width: 2.38rem;
-    background: rgba(247, 247, 247, 1);
-    border-radius: 0.1rem 0.1rem 0rem 0rem;
-    padding-left: 0.22rem;
-    margin: 0 auto;
-    text-align: left;
-    .title {
-      font-size: 0.11rem;
-      line-height: 0.3rem;
-      color: rgba(89, 89, 89, 1);
-    }
-    .number {
-      color: #0096c1;
-      font-size: 0.2rem;
-    }
-  }
   .bfb {
     font-size: 0.11rem;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -3953,6 +3952,27 @@ export default {
     line-height: 0.16rem;
   }
 }
+.teacherlistplan ul li {
+  width: 1.28rem;
+  height: 1.2rem;
+  background: rgba(247, 247, 247, 1);
+  display: inline-block;
+  margin: 0.02rem;
+  .number {
+    font-size: 0.2rem;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(89, 89, 89, 1);
+    line-height: 0.6rem;
+  }
+  .title {
+    font-size: 0.11rem;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(89, 89, 89, 1);
+    line-height: 0.16rem;
+  }
+}
 .descs {
   text-align: left;
   font-size: 0.11rem;
@@ -3962,4 +3982,195 @@ export default {
   line-height: 0.16rem;
   margin-left: 0.2rem;
 }
+
+.bannerbox2 {
+  display: flex;
+  width: 80%;
+  margin: auto;
+  margin-top: 10px;
+  .bannerleft {
+    width: 45%;
+    text-align: left;
+    height: 1.56rem;
+    background: rgba(247, 247, 247, 1);
+    border-radius: 0.06rem;
+    padding: 0.1rem;
+    font-size: 0.12rem;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 1);
+    .bannertext {
+      text-align: center;
+      .number {
+        font-size: 0.4rem;
+        font-family: DINAlternate-Bold, DINAlternate;
+        font-weight: bold;
+        color: rgba(0, 150, 193, 1);
+        line-height: 1rem;
+      }
+      .title {
+        font-size: 0.11rem;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: rgba(89, 89, 89, 1);
+      }
+    }
+  }
+  .bannerright {
+    width: 50%;
+    text-align: left;
+    ul li {
+      height: 0.4rem;
+      margin-left: 10px;
+      background: rgba(247, 247, 247, 1);
+      border-radius: 0.06rem;
+      font-size: 0.11rem;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(89, 89, 89, 1);
+      padding-left: 10px;
+      margin-top: 0.02rem;
+      span {
+        font-size: 0.2rem;
+        font-family: DINAlternate-Bold, DINAlternate;
+        font-weight: bold;
+        color: rgba(89, 89, 89, 1);
+      }
+    }
+    ul li:nth-child(1) {
+      font-size: 0.12rem;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 1);
+      span {
+        font-size: 0.2rem;
+        font-family: DINAlternate-Bold, DINAlternate;
+        font-weight: bold;
+        color: rgba(0, 150, 193, 1);
+      }
+    }
+  }
+}
+.khbanner {
+  text-align: left;
+  width: 80%;
+  margin: auto;
+  margin-top: 0.37rem;
+}
+.listtype {
+  font-size: 0.12rem;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1);
+}
+.khbox {
+  margin-top: 0.17rem;
+}
+.khbox ul {
+  display: flex;
+}
+.khbox ul li {
+  width: 0.8rem;
+  height: 0.5rem;
+  padding: 10px;
+  background: rgba(247, 247, 247, 1);
+  border-radius: 0.06rem;
+  margin-right: 0.05rem;
+  .title {
+    font-size: 0.11rem;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(89, 89, 89, 1);
+  }
+
+  .number {
+    font-size: 0.2rem;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(0, 150, 193, 1);
+  }
+}
+.khbox ul li:nth-child(3) {
+  .number {
+    color: rgba(89, 89, 89, 1);
+  }
+}
+.lzbanner {
+  width: 80%;
+  margin: auto;
+}
+.lztop {
+  height: 1.8rem;
+  background: rgba(247, 247, 247, 1);
+  border-radius: 0.06rem;
+  padding: 10px;
+  .title {
+    text-align: left;
+  }
+}
+.lzbox {
+  display: flex;
+  margin-top: 0.34rem;
+  .lzleft {
+    width: 50%;
+    .number {
+      font-size: 0.2rem;
+      font-family: DINAlternate-Bold, DINAlternate;
+      font-weight: bold;
+      color: rgba(0, 150, 193, 1);
+    }
+    .title {
+      text-align: center;
+      font-size: 0.11rem;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(89, 89, 89, 1);
+    }
+  }
+  .lzright {
+    width: 50%;
+    .number {
+      color: rgba(89, 89, 89, 1);
+      font-size: 0.2rem;
+      font-family: DINAlternate-Bold, DINAlternate;
+      font-weight: bold;
+    }
+    .title {
+      text-align: center;
+      font-size: 0.11rem;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(89, 89, 89, 1);
+    }
+  }
+}
+.lzbottom {
+  margin-top: 0.15rem;
+  width: 1.09rem;
+  height: 1.2rem;
+  padding: 10px;
+  background: rgba(247, 247, 247, 1);
+  border-radius: 0.06rem;
+  .title {
+    text-align: left;
+  }
+  .lzbox2 {
+    margin-top: 0.34rem;
+    .number {
+      font-size: 0.2rem;
+      font-family: DINAlternate-Bold, DINAlternate;
+      font-weight: bold;
+      color: rgba(255, 74, 74, 1);
+      line-height: 0.24rem;
+    }
+    .title {
+      text-align: center;
+      font-size: 0.11rem;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(89, 89, 89, 1);
+    }
+  }
+}
+
 </style>
