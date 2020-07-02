@@ -90,11 +90,11 @@
                 :options="swiperOption4"
               >
                 <swiper-slide>
-                  <p>师资评价</p>
+                  <p>师资绩效</p>
                   <div class="swiperborder"></div>
                 </swiper-slide>
                 <swiper-slide>
-                  <p>师资绩效</p>
+                  <p>师资评价</p>
                   <div class="swiperborder"></div>
                 </swiper-slide>
                 <swiper-slide>
@@ -108,33 +108,37 @@
               </swiper>
               <swiper
                 v-if="showteacherString && showteacherWork"
-                ref="mySwiper"
+                ref="mySwiper4"
                 class="student_main_box"
                 :options="swiperOptionteacher"
               >
                 <!-- 师资评价-->
                 <swiper-slide>
-                  <div @click="handleClickMore" style="height:95%" class="boxshadow">
+                  <div style="height:100%" class="boxshadow">
                     <div class="box2_top">
                       <div class="title">
                         <p style="margin-right:0.1rem;">师资评价</p>
-                        <div class="selectcomp1">
-                          <p @click.stop="handleSelectcomp()" class="selectcomptitle">{{selectname}}</p>
-                          <div v-show="selectcomp" class="selectsingle">
-                            <p @click.stop="changeValue('月度',1)" class="singletitle">月度</p>
-                            <p @click.stop="changeValue('季度',2)" class="singletitle">季度</p>
-                            <p @click.stop="changeValue('年度',3)" class="singletitle">年度</p>
-                          </div>
-                        </div>
                       </div>
-                      <p>更多</p>
+                      <p @click="handleClickMore" class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
+                    <!-- <mt-tabbar v-model="selected2">
+                      <mt-tab-item @click.stop="changeValue('月度',1)" id="月度">
+                        <p @click.stop="changeValue('月度',1)">月度</p>
+                      </mt-tab-item>
+                      <mt-tab-item @click.stop="changeValue('季度',2)" id="季度">
+                        <p @click.stop="changeValue('季度',2)">季度</p>
+                      </mt-tab-item>
+                      <mt-tab-item id="年度">
+                        <p @click.stop="changeValue('年度',3)">年度</p>
+                      </mt-tab-item>
+                    </mt-tabbar>-->
+
                     <div class="teacher_radar">
                       <radar
                         v-if="flag1"
                         ref="radar1"
-                        style="margin-top: 0.3rem;height:2.1rem"
+                        style="margin-top:0.3rem;height:2.1rem"
                         :maintitle="'对老师评价雷达图'"
                         :barnumber="radardata1"
                       ></radar>
@@ -142,28 +146,117 @@
                         <p style="text-align: center; line-height: 2rem; color: #dddddd;">暂无数据</p>
                       </div>
                       <div class="teacher_radar_detial">
-                        <div class="rader_detial_left">
-                          <div class="rader_detial_left_top">
-                            <p class="title">评价平均分</p>
-                            <p class="desc">(满分{{teacherValuate.zdmf}})</p>
+                        <div>
+                          <div class="blockbg">
                             <p class="number">{{teacherValuate.pjpjf}}</p>
+                            <p class="title">评价平均分</p>
+                            <!-- <p class="desc">(满分{{teacherValuate.zdmf}})</p> -->
                           </div>
-                          <div class="rader_detial_left_end">
-                            <p class="title">评价最低分</p>
-                            <p class="number">{{teacherValuate.zdf}}</p>
-                          </div>
-                        </div>
-                        <div class="rader_detial_middle"></div>
-                        <div class="rader_detial_right">
-                          <div class="rader_detial_left_top">
-                            <p class="title">评价发送次数</p>
+                          <div class="blockbg">
                             <p class="number">{{teacherValuate.zs}}</p>
-                          </div>
-                          <div class="rader_detial_left_end">
-                            <p class="title">评价表提交率</p>
-                            <p class="number">{{teacherValuate.tjl}}</p>
+                            <p class="title">评价发送次数</p>
                           </div>
                         </div>
+                        <div>
+                          <div class="blockbg">
+                            <p class="number">{{teacherValuate.zdf}}</p>
+                            <p class="title">评价最低分</p>
+                          </div>
+                          <div class="blockbg">
+                            <p class="number">{{teacherValuate.tjl}}</p>
+                            <p class="title">评价表提交率</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </swiper-slide>
+                <!-- 师资介绍-->
+                <swiper-slide>
+                  <div @click="hadleStudentExamine" class="student_exam boxshadow">
+                    <div class="student_train_top box2_top">
+                      <p style="margin-right:0.1rem" class="title">师资介绍</p>
+                      <p class="more">更多</p>
+                      <img src="../../../assets/images/right_arrow.png" alt />
+                    </div>
+                    <p class="descs">数据截止时间：2020年/06月</p>
+                    <div style="width: 3rem;display:none;">
+                      <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
+                    </div>
+                    <!-- 师资介绍内容 -->
+                    <div style="margin-top:0.25rem">
+                      <div class="teachernum">
+                        <p class="title">老师总数量（人）</p>
+                        <p class="number">1159</p>
+                      </div>
+                      <div class="teacherlist">
+                        <ul>
+                          <li>
+                            <p class="number">217</p>
+                            <p class="title">主治医师</p>
+                          </li>
+                          <li>
+                            <p class="number">217</p>
+                            <p class="title">主治医师</p>
+                          </li>
+                        </ul>
+                        <ul>
+                          <li style="border-radius: 0rem 0rem 0rem 0.1rem;">
+                            <p class="number">217</p>
+                            <p class="title">主治医师</p>
+                          </li>
+                          <li style="border-radius: 0rem 0rem 0.1rem 0rem;">
+                            <p class="number">217</p>
+                            <p class="title">主治医师</p>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </swiper-slide>
+                <!-- 师资培训 -->
+                <swiper-slide>
+                  <div @click="hadleStudentExamine" class="student_exam boxshadow">
+                    <div class="student_train_top box2_top">
+                      <p style="margin-right:0.1rem" class="title">师资培训</p>
+                      <p class="more">更多</p>
+                      <img src="../../../assets/images/right_arrow.png" alt />
+                    </div>
+                    <p class="descs">数据截止时间：2020年/06月</p>
+                    <div style="width: 3rem;display:none;">
+                      <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
+                    </div>
+                    <!-- 师资培训内容 -->
+                    <div style="margin-top:0.25rem">
+                      <div class="teachernum">
+                        <p class="title">本年度培训计划</p>
+                      </div>
+                      <div class="teacherlist">
+                        <ul>
+                          <li>
+                            <p class="number">20</p>
+                            <p class="title">申报计划</p>
+                          </li>
+                          <li>
+                            <p class="number">15</p>
+                            <p class="title">已完成计划</p>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="teachernum">
+                        <p class="title">本年度培训人次</p>
+                      </div>
+                      <div class="teacherlist">
+                        <ul>
+                          <li>
+                            <p class="number">217</p>
+                            <p class="title">计划培训人次</p>
+                          </li>
+                          <li>
+                            <p class="number">217</p>
+                            <p class="title">目前培训人次</p>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -172,179 +265,51 @@
                 <swiper-slide>
                   <div @click="hadleStudentExamine" class="student_exam boxshadow">
                     <div class="student_train_top box2_top">
-                      <p style="margin-right:0.1rem" class="title">住培考核状况</p>
-
-                      <div class="selectcomp">
-                        <p
-                          @click.stop="handleSelectcomp1()"
-                          class="selectcomptitle"
-                        >上{{selectname1}}</p>
-                        <div v-show="selectcomp1" class="selectsingle">
-                          <p @click.stop="changeValues('月度')" class="singletitle">理论</p>
-                          <p @click.stop="changeValues('季度')" class="singletitle">技能</p>
-                        </div>
-                      </div>
+                      <p style="margin-right:0.1rem" class="title">师资绩效</p>
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
+                    <p class="descs">数据截止时间：2020年/06月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
-
-                    <div v-for="(item,index) in studentexame" :key="index" class="tabletop">
-                      <p class="topname">{{item.examtype}}</p>
-                      <div class="top">
-                        <div class="end">
-                          <div class="end_end">
-                            <div class="end_th">
-                              <p>发布场次</p>
-                              <p>参与人次</p>
-                              <p>得分率</p>
-                            </div>
-                            <div class="endtable">
-                              <div class="end_td">
-                                <p>{{item.kscc}}</p>
-                                <p>{{item.cysc}}</p>
-                                <p>{{item.dfl}}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                    <!-- 师资介绍内容 -->
+                    <div style="margin-top:0.25rem">
+                      <div class="teachernum">
+                        <p class="title">带教学员数量</p>
+                        <p class="number">266</p>
+                      </div>
+                      <div class="teachernum2">
+                        <p class="title">带教学员数量</p>
+                        <p class="number">266</p>
+                        <span class="bfb">教学活动好评度</span>
+                        <span class="bfbnum">85.76%</span>
+                      </div>
+                      <div class="teacherlist">
+                        <ul>
+                          <li>
+                            <p class="number">217</p>
+                            <p class="title">主治医师</p>
+                          </li>
+                          <li>
+                            <p class="number">217</p>
+                            <p class="title">主治医师</p>
+                          </li>
+                        </ul>
+                        <ul>
+                          <li style="border-radius: 0rem 0rem 0rem 0.1rem;">
+                            <p class="number">217</p>
+                            <p class="title">主治医师</p>
+                          </li>
+                          <li style="border-radius: 0rem 0rem 0.1rem 0rem;">
+                            <p class="number">217</p>
+                            <p class="title">主治医师</p>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
                 </swiper-slide>
-
-                <!-- 师资介绍-->
-                <swiper-slide>
-                  <div @click="hadleStudentSurvey" class="boxshadow">
-                    <div class="box2_top">
-                      <div class="top">
-                        <p class="title">当前学员概况</p>
-                        <p class="desc">截止时间:当前</p>
-                      </div>
-                      <p class="more">更多</p>
-                      <img src="../../../assets/images/right_arrow.png" alt />
-                    </div>
-                    <div style="width: 3rem;display:none;">
-                      <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
-                    </div>
-                    <div class="charts">
-                      <div class="radechart" v-for="(item,index) in studenttype" :key="index">
-                        <div class="radechart_desc_top" v-if="item.typeid=='999'">
-                          <p class="title">{{item.typename}}</p>
-                          <p class="number">{{item.studentsum}}</p>
-                        </div>
-                      </div>
-                      <div class="radechart">
-                        <div class="radechart_desc">
-                          <div
-                            class="radechart_desc_end"
-                            v-for="(item,index) in studenttype"
-                            :key="index"
-                          >
-                            <div class="radechart_desc_detial" v-if="item.typename !='共有学员'">
-                              <div :style="randomRgb(item)" class="block"></div>
-                              <p class="title">{{item.typename}}</p>
-                              <p class="newnumber">{{item.studentsum}}</p>
-                              <p class="desc">{{item.slbl}}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        id="myChart2"
-                        :style="{width: '1.2rem', height: '1.2rem', marginLeft:'auto',marginRight: '0.1rem'}"
-                      ></div>
-                      <div class="pointchart">
-                        <p class="title">招收人数统计图</p>
-                        <div class="selfchart">
-                          <p class="xray">人数</p>
-                          <p class="yray">
-                            <span>时</span>
-                            <br />
-                            <span>间</span>
-                          </p>
-                          <div class="selfchart_main">
-                            <div
-                              v-for="(item, index) in studentsubject"
-                              :key="index"
-                              class="selfchart_main_single"
-                            >
-                              <div class="left">
-                                <p style="color:#77CAF6">{{item.zszs}}</p>
-                                <div :style="{ 'height': item.zszs*0.001 + 'rem' }" class="block"></div>
-                              </div>
-                              <div class="right">
-                                <p style="color:#326699">{{item.jqzyzss}}</p>
-                                <div
-                                  :style="{ 'height': item.jqzyzss*0.001 + 'rem' }"
-                                  class="block"
-                                ></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="selfchart_end">
-                          <p style="margin-right:0.06rem">0</p>
-                          <p v-for="(item2, index2) in studentsubject" :key="index2">{{item2.nian}}</p>
-                        </div>
-
-                        <div class="pointchart_desc">
-                          <div style="background: #77CAF6;" class="block"></div>
-                          <p style="margin-right:auto">总招收人数</p>
-                          <div style="background: #326699;" class="block"></div>
-                          <p style="margin-right:0.15rem">紧缺专业招收人数</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </swiper-slide>
-
-                <!-- 师资培训-->
-                <swiper-slide>
-                  <div @click="hadleStudentScore" class="student_score boxshadow">
-                    <div class="student_train_top box2_top">
-                      <p class="title">学员评价概况</p>
-                      <p class="more">更多</p>
-                      <img src="../../../assets/images/right_arrow.png" alt />
-                    </div>
-                    <div style="width: 3rem;display:none">
-                      <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
-                    </div>
-                    <div class="student_score_main">
-                      <radar
-                        v-if="flag2"
-                        ref="radar2"
-                        :maintitle="'360评价图'"
-                        :barnumber="radardata2"
-                      ></radar>
-                      <div v-else style="width:100%;height:2rem;">
-                        <p style="text-align: center; line-height: 2rem; color: #dddddd;">暂无数据</p>
-                      </div>
-                      <div class="student_score_main_desc">
-                        <div class="score_main_single">
-                          <p class="title">评价平均分</p>
-                          <p class="ddes">（满分{{studentvalue.evaluateoverview.zdmf}}）</p>
-                          <p class="answer">{{studentvalue.evaluateoverview.pjpjf}}</p>
-                        </div>
-                        <div class="score_main_single">
-                          <p class="title">各角色对学员评价最低分</p>
-                          <p class="answer">{{studentvalue.evaluateoverview.zdf}}</p>
-                        </div>
-                        <div class="score_main_single">
-                          <p class="title">各角色对学员评价总数</p>
-                          <p class="answer">{{studentvalue.evaluateoverview.zs}}</p>
-                        </div>
-                        <div class="score_main_single">
-                          <p class="title">评价表提交率</p>
-                          <p class="answer">{{studentvalue.evaluateoverview.tjl}}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </swiper-slide>
-              
               </swiper>
             </div>
           </div>
@@ -756,7 +721,14 @@ import radar from "../../../components/mecharts/radar.vue";
 import cycle from "../../../components/mecharts/cycle.vue";
 import barlabel from "../../../components/mecharts/barlabel.vue";
 import myCharts from "echarts";
-import { Indicator, Navbar, TabItem } from "mint-ui";
+import {
+  Indicator,
+  Navbar,
+  TabItem,
+  Tabbar,
+  TabContainer,
+  TabContainerItem
+} from "mint-ui";
 import { querySkillCentredata, queryActivitydata } from "../../../api/skill";
 import {
   teachereValuate,
@@ -781,7 +753,7 @@ export default {
     return {
       active: "tab-container1",
       selected: "1",
-      selected2: "1",
+      selected2: "月度",
       student: "7",
       skill: "10",
       hospitalName: "",
@@ -900,11 +872,11 @@ export default {
               false
             );
           },
-          transitionEnd: function(event) {},
-          click: function() {
-            const realIndex = this.realIndex;
-            self.handleClickSlide(realIndex);
-          }
+          transitionEnd: function(event) {}
+          // click: function() {
+          //   const realIndex = this.realIndex;
+          //   self.handleClickSlide(realIndex);
+          // }
         }
       },
 
@@ -1992,7 +1964,7 @@ export default {
 }
 
 .main {
-  height: 95%;
+  height: 100%;
   width: 100%;
   overflow: hidden;
   position: absolute;
@@ -3281,7 +3253,7 @@ export default {
 }
 
 .teacher_radar_detial {
-  display: flex;
+  // display: flex;
   align-items: center;
   margin-bottom: 0.15rem;
   margin-top: 0.1rem;
@@ -3418,13 +3390,8 @@ export default {
   }
 }
 .teacher_radar {
-  // margin-top: 0.1rem;
-  width: 3.3rem;
-  height: 3rem;
+  height: 70%;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
   margin: auto;
 }
@@ -3844,6 +3811,7 @@ export default {
   background: #f0f0f7;
   position: absolute;
   z-index: 1;
+  top: 0.12rem;
   left: 1rem;
   .selectcomptitle {
     font-size: 0.1rem !important;
@@ -3881,5 +3849,117 @@ export default {
   .mint-tab-item {
     width: 0.5rem;
   }
+}
+.blockbg {
+  height: 0.6rem;
+  width: 1.1rem;
+  background: #f7f7f7;
+  border-radius: 0.06rem;
+  padding-top: 0.15rem;
+  line-height: 0.2rem;
+  margin-right: 0.2rem;
+  display: inline-block;
+}
+.mint-tabbar {
+  top: 0.4rem;
+  height: 0.4rem;
+}
+.teachernum {
+  height: 0.6rem;
+  width: 2.38rem;
+  background: rgba(247, 247, 247, 1);
+  border-radius: 0.1rem 0.1rem 0rem 0rem;
+  padding-left: 0.22rem;
+  margin: 0 auto;
+  text-align: left;
+  .title {
+    font-size: 0.11rem;
+    line-height: 0.3rem;
+    color: rgba(89, 89, 89, 1);
+  }
+  .number {
+    color: #0096c1;
+    font-size: 0.2rem;
+  }
+}
+.teachernum2 {
+  height: 1rem;
+  width: 2.38rem;
+  background: rgba(247, 247, 247, 1);
+  padding-left: 0.22rem;
+  margin: 0 auto;
+  text-align: left;
+  .title {
+    font-size: 0.11rem;
+    line-height: 0.3rem;
+    color: rgba(89, 89, 89, 1);
+  }
+  .number {
+    color: #0096c1;
+    font-size: 0.2rem;
+  }
+
+  .teachernum {
+    height: 0.6rem;
+    width: 2.38rem;
+    background: rgba(247, 247, 247, 1);
+    border-radius: 0.1rem 0.1rem 0rem 0rem;
+    padding-left: 0.22rem;
+    margin: 0 auto;
+    text-align: left;
+    .title {
+      font-size: 0.11rem;
+      line-height: 0.3rem;
+      color: rgba(89, 89, 89, 1);
+    }
+    .number {
+      color: #0096c1;
+      font-size: 0.2rem;
+    }
+  }
+  .bfb {
+    font-size: 0.11rem;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(89, 89, 89, 1);
+    line-height: 0.16rem;
+  }
+  .bfbnum {
+    font-size: 0.15rem;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(0, 150, 193, 1);
+    line-height: 0.17rem;
+  }
+}
+.teacherlist ul li {
+  width: 1.28rem;
+  height: 0.6rem;
+  background: rgba(247, 247, 247, 1);
+  display: inline-block;
+  margin: 0.02rem;
+  .number {
+    font-size: 0.2rem;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(89, 89, 89, 1);
+    line-height: 0.24rem;
+  }
+  .title {
+    font-size: 0.11rem;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(89, 89, 89, 1);
+    line-height: 0.16rem;
+  }
+}
+.descs {
+  text-align: left;
+  font-size: 0.11rem;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(140, 140, 140, 1);
+  line-height: 0.16rem;
+  margin-left: 0.2rem;
 }
 </style>
