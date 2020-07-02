@@ -638,46 +638,45 @@
         </mt-tab-container-item>
         <!-- 技能中心 -->
         <mt-tab-container-item id="3">
-          <div class="skill">
-            <div class="skill_top">
-              <div class="top">
-                <p class="title">技能中心</p>
-              </div>
-              <div class="middle">
-                <div class="middle_left">
-                  <div class="middle_left_top">
-                    <p class="number">{{skillcentrdata.ljhdcs}}</p>
-                    <p class="desc">累计活动次数</p>
+          <div class="jnbanner">
+            <div class="box3_top">
+              <p style="margin-right:0.1rem" class="title">学员评价概况</p>
+              <p class="more">更多</p>
+              <img src="../../../assets/images/right_arrow.png" alt />
+            </div>
+            <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+            <div style="width: 3rem;display:none;">
+              <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
+            </div>
+            <!-- 技能中心内容 -->
+            <div class="jnzx">
+              <div class="jntop">
+                <div class="jntoptext">
+                  <div class="text">
+                    <p>累计活动次数（次）</p>
                   </div>
-                  <div class="middle_left_end">
-                    <p class="number">{{skillcentrdata.ljsyrc}}</p>
-                    <p class="desc">累计使用人次</p>
+                  <div class="text">
+                    <p>累计使用人次（人）</p>
                   </div>
                 </div>
-                <div class="middle_right">
-                  <div
-                    v-for="(item3, index3) in skilldata"
-                    :key="index3"
-                    class="middle_right_single"
-                  >
-                    <p class="desc">{{item3.desc}}</p>
-                    <p class="number">{{item3.number}}</p>
+                <div class="jntoptext">
+                  <div class="number">
+                    <p>{{skillcentrdata.ljhdcs}}</p>
+                  </div>
+                  <div class="number">
+                    <p>{{skillcentrdata.ljsyrc}}</p>
                   </div>
                 </div>
               </div>
+              <div class="jnbottom">
+                <ul>
+                  <li v-for="(item3, index3) in skilldata" :key="index3">
+                    <p class="title">{{item3.desc}}</p>
+                    <p class="number">>{{item3.number}}</p>
+                  </li>
+                </ul>
+              </div>
             </div>
-
-            <div style="height: 40%;display:none">
-              <p style="text-align: center; line-height: 2rem; color: #dddddd;">暂无数据</p>
-            </div>
-            <mt-tab-container v-model="skill">
-              <mt-tab-container-item id="10">
-                <div style="height: 2.3rem" class="news"></div>
-              </mt-tab-container-item>
-              <mt-tab-container-item id="11">
-                <div class="news"></div>
-              </mt-tab-container-item>
-            </mt-tab-container>
           </div>
         </mt-tab-container-item>
       </mt-tab-container>
@@ -2009,6 +2008,7 @@ export default {
   }
 }
 .main_top {
+  background-image: url("../../../assets/images/img_bgtop.png");
   background-size: 100%;
   padding-left: 0.1rem;
   padding-right: 0.1rem;
@@ -2622,9 +2622,50 @@ export default {
   display: flex;
   align-items: center;
   margin-top: 0.12rem;
-  width: 3rem;
+  // width: 3rem;
   // margin-left: 0.2rem;
   // margin-right: 0.15rem;
+  .title {
+    font-family: PingFangSC-Regular;
+    font-size: 0.15rem;
+    color: #212121;
+    letter-spacing: 0;
+    // line-height: 15px;
+    border-left: 3px solid #277fff;
+    padding-left: 0.05rem;
+    margin-left: 0.1rem;
+    height: 0.15rem;
+    line-height: 0.15rem;
+  }
+  .more {
+    font-family: PingFangSC-Regular;
+    font-size: 0.15rem;
+    color: #474c63;
+    letter-spacing: 0;
+    text-align: right;
+    // line-height: 15px;
+    margin-left: auto;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    .desc {
+      font-size: 0.1rem;
+      color: #dddddd;
+      margin-left: 0.05rem;
+    }
+  }
+  img {
+    width: 0.15rem;
+    height: 0.15rem;
+    margin-right: 0.1rem;
+  }
+}
+.box3_top {
+  display: flex;
+  align-items: center;
+  padding-top: 0.12rem;
+  margin-top: 0.3rem;
   .title {
     font-family: PingFangSC-Regular;
     font-size: 0.15rem;
@@ -4172,5 +4213,68 @@ export default {
     }
   }
 }
-
+.jnbanner {
+  width: 3.35rem;
+  height: 5.12rem;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 0.06rem;
+  margin: auto;
+}
+.jnzx {
+  width: 2.85rem;
+  margin: auto;
+}
+.jntop {
+  padding: 20px;
+  height: 0.86rem;
+  background: rgba(0, 150, 193, 1);
+  border-radius: 0.06rem;
+  margin: auto;
+  .jntoptext {
+    display: flex;
+  }
+  .text {
+    width: 50%;
+    font-size: 0.12rem;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    line-height: 0.17rem;
+  }
+  .number {
+    width: 50%;
+    font-size: 0.24rem;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 1);
+    line-height: 0.32rem;
+  }
+}
+.jnbottom ul {
+  margin-top: 0.06rem;
+}
+.jnbottom ul li {
+  width: 1rem;
+  height: 0.6rem;
+  padding: 20px;
+  margin-top: 0.06rem;
+  display: inline-block;
+  margin-right: 0.06rem;
+  background: rgba(247, 247, 247, 1);
+  border-radius: 0.06rem;
+  .title {
+    font-size: 0.14rem;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(89, 89, 89, 1);
+    line-height: 0.16rem;
+  }
+  .number {
+    font-size: 0.2rem;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: rgba(89, 89, 89, 1);
+    line-height: 0.24rem;
+  }
+}
 </style>
