@@ -178,7 +178,7 @@
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <p class="descs">数据截止时间：2020年/06月</p>
+                    <p class="descs">数据截止时间：：{{years}}年/06月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
@@ -221,7 +221,7 @@
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <p class="descs">数据截止时间：2020年/06月</p>
+                    <p class="descs">数据截止时间：：{{years}}年/06月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
@@ -268,7 +268,7 @@
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+                    <p class="descs">数据截止时间：：{{years}}年/{{moment}}月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
@@ -353,7 +353,7 @@
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+                    <p class="descs">数据截止时间：：{{years}}年/{{moment}}月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
@@ -427,7 +427,7 @@
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+                    <p class="descs">数据截止时间：：{{years}}年/{{moment}}月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
@@ -547,7 +547,7 @@
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+                    <p class="descs">数据截止时间：：{{years}}年/{{moment}}月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
@@ -591,7 +591,7 @@
                       <p class="more">更多</p>
                       <img src="../../../assets/images/right_arrow.png" alt />
                     </div>
-                    <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+                    <p class="descs">数据截止时间：：{{years}}年/{{moment}}月</p>
                     <div style="width: 3rem;display:none;">
                       <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
                     </div>
@@ -644,7 +644,7 @@
               <p class="more">更多</p>
               <img src="../../../assets/images/right_arrow.png" alt />
             </div>
-            <p class="descs">数据截止时间：2020年/{{moment}}月</p>
+            <p class="descs">数据截止时间：{{years}}年/{{moment}}月</p>
             <div style="width: 3rem;display:none;">
               <p style="text-align: center; line-height: 4rem; color: #dddddd;">暂无数据</p>
             </div>
@@ -765,6 +765,7 @@ export default {
       showbar: true,
       showtrain: false,
       flag1: false,
+      years: "",
       flag2: false,
       selectcomp1: false,
       selectname1: "月度",
@@ -1563,6 +1564,7 @@ export default {
         moment(moment().month() + 1, "MM").daysInMonth() +
         "日";
     }
+    this.years = moment().year();
 
     // console.log(moment().year());
 
